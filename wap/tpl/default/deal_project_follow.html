@@ -1,0 +1,176 @@
+{include file="inc/header.html"} 
+<?php
+$this->_var['dpagecss'][] = $this->_var['TMPL_REAL']."/css/fancybox.css";
+$this->_var['dpagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.fancybox.js";
+$this->_var['dcpagejs'][] = $this->_var['TMPL_REAL']."/js/deal.js";
+$this->_var['dpagejs'][] = $this->_var['TMPL_REAL']."/js/deal.js";
+
+$this->_var['dpagecss'][] = $this->_var['TMPL_REAL']."/css/deal_support.css";
+$this->_var['dpagecss'][] = $this->_var['TMPL_REAL']."/css/css/font-awesome.css";
+$this->_var['dpagecss'][] = $this->_var['TMPL_REAL']."/css/deal.css";
+?>
+<link rel="stylesheet" type="text/css" href="{function name="parse_css" v="$dpagecss"}" />
+<script type="text/javascript" src="{function name="parse_script" v="$dpagejs" c="$dcpagejs"}"></script>
+<script type="text/javascript" src="{$TMPL}/js/jquery.SuperSlide.2.1.js"></script>
+<!-- 项目背景 开始-->
+<div class="deal_body" {if $deal_info.deal_backgroundColor_image neq null} style="background:url({$deal_info.deal_backgroundColor_image}) repeat;" {/if}>
+	<!-- 项目大海报-->
+	<div class="deal_banner" {if $deal_info.deal_background_image neq null}style="background:url({$deal_info.deal_background_image}) top center no-repeat;padding-top:405px;"{/if}>
+		<!--中间开始-->
+		<div class="xqmain">
+			<div class="xqmain_main">
+				<!--中间页面左边start-->
+					<!--项目头部标题 start-->
+				<div class="xqmain_left">
+					<div class="hd1">
+						<span class="title f_l">{$deal_info.name}</span>
+					</div>
+					<div class="hd2">
+						<span class="theme_bgcolor" style="padding:3px 5px;color:#fff">发起人</span>
+						{if $deal_info.user_id neq 0}
+						<span>{$deal_info.user_name}</span><span style="color:#dadada">|</span>
+						<span class="dz">{$deal_info.province}&nbsp;{$deal_info.city}</span><span style="color:#dadada">|</span>
+						<span class="kj">{$deal_info.deal_type}</span>
+						{else}
+						<span>{function name="app_conf" v="SITE_NAME"}</span>
+						{/if}
+					</div>
+					<!--项目头部标题 end-->
+					<!--项目领投人 start-->
+					{if $leader_info neq null}
+						<div class="invester leader">
+							<div class="invester_hd">
+								<span class="f24 theme_fcolor">项目领投人</span>
+							</div>
+							<div class="invester_bd">
+								<div class="l">
+									<a href="" class="overflow_hide" style="display:block">{function name="show_avatar" p="$leader_info.user_id" t="middle"}</a>
+									<div class="blank10"></div>
+									<a href="javascript:void(0);" onclick="send_message({$leader_info.user_id})" class="theme_fcolor f14">+发私信</a>
+								</div>
+								<div class="r">
+							    	<div class="m">
+										 <div class="name">
+											<a href="javascript:void(0);" onclick="send_message({$leader_info.user_id})" class="v_aut f24">{$leader_info.user_name}</a>
+											<span class="v_lea" title="领投人"></span>
+										</div>
+										<div class="blank0"></div>
+							            <div class="pro f_666">
+											{$leader_info.identify_name}&nbsp;&nbsp;|&nbsp;&nbsp;<span class="f_line"><a href="javascript:void(0)" id="detailed_information">&gt;&gt;详细</a></span><br>
+											认投时间：{function name="to_date" v=$leader_info.create_time}<br>
+											是否愿意担任有限合伙企业普通合伙人：<span class="f_red">{if $leader_info.is_partner eq 1}愿意{/if}{if $leader_info.is_partner eq 2}不愿意{/if}</span><br>
+										</div>
+							        </div>
+							        <div class="r2">
+							        	<div class="tit">领投金额</div>
+							        	<div class="val">{$leader_info.money}元</div>
+							        </div>
+									<div class="blank0"></div>
+							        <div class="pro">
+							        	<span class="theme_fcolor">能为创业者提供的其它帮助：</span>
+							        	<span class="f_666">{$leader_info.leader_help}</span>
+							        </div>
+							        <div class="pro">
+							        	<span class="theme_fcolor">对创业团队评价：</span><span class="f_666">{$leader_info.leader_for_team}</span><br>
+							        </div>
+							        <div class="pro">
+							        	<span class="theme_fcolor">对创业项目评价：</span><span class="f_666">{$leader_info.leader_for_project}</span>
+							        </div>
+							    </div>
+							</div>
+						</div>
+					{/if}
+					<!--项目领投人 end-->
+					<!--项目跟投人start-->
+					<div class="blank20"></div>
+					{if $enquiry_info_all neq null}
+						<div class="invester follower">
+							<div class="invester_hd">
+								<div class="f_l">
+									<span class="theme_fcolor">项目跟投人</span>
+								</div>
+								<div class="f_r f16">
+									共<span class="f_red">{$enquiry_count}</span>位
+								</div>
+							</div>
+							<ul class="invester_bd">
+								{foreach from=$enquiry_info_all item=enquiry_all_item}
+								<li class="follower_list">
+									<div class="l">
+										{function name="show_avatar" p="$enquiry_all_item.user_id" t="middle"}
+										<div class="blank10"></div>
+										<a href="javascript:void(0);" onclick="send_message({$enquiry_all_item.user_id})" class="theme_fcolor">+发私信</a>
+									</div>
+									<div class="m">
+								    	<div class="name">
+											<a href="javascript:void(0);" onclick="send_message({$enquiry_all_item.user_id})" class="v_aut f24">{$enquiry_all_item.user_name}</a>
+											<span class="v_rea" title="实名认证会员"></span>
+										</div>
+										<div class="blank0"></div>
+										<div class="pro">
+											<div>
+									        	认投时间：<span>{function name="to_date" v=$enquiry_all_item.create_time}</span>
+									        </div>
+											<div>
+												投资理由：<span class="f_999">{$enquiry_all_item.investment_reason}</span>
+											</div>
+										</div>
+									</div>
+		    						<div class="r2">
+		    							<div class="tit">跟投金额</div>
+		    							<div class="val">{$enquiry_all_item.money}元</div>
+		    						</div>
+		    						<div class="blank1"></div>
+								</li>
+								{/foreach}
+							</ul>
+						</div>
+						<div class="blank20"></div>
+						<div class="pages">
+						{$pages}
+						</div>
+						<div class="blank20"></div>
+					{/if}
+					<!--项目跟投人start-->
+				</div>
+				<!--中间页面左边end-->
+				{include file="inc/deal_investor_right.html"}
+				<div class="blank"></div>
+			</div>
+		</div>
+		<!--中间结束-->
+		</div>
+		</div>
+		<div id="gotop" style="display: block;z-index:99;"></div>
+		<div class="blank"></div>
+	</div>
+</div>
+<!-- 项目背景 结束-->
+<script type="text/javascript">
+    jQuery(".slideTxtBox").slide({trigger:"click",delayTime:500});
+</script>
+<script type="text/javascript">
+	$.(function(){
+		leader_detailed_information();
+	});
+//领投人详细资料
+function leader_detailed_information(){
+	$("#detailed_information").bind("click",function(){
+		var ajaxurl='{url r="ajax#leader_detailed_information" p="deal_id=$deal_info.id"}';
+		$.ajax({
+			url: ajaxurl,
+			dataType: "json",
+			type: "POST",
+			success: function(ajaxobj){
+				if(ajaxobj.status==1){
+					$.weeboxs.open(ajaxobj.html, {boxid:'leader_detailed_info',contentType:'text',showButton:false, showCancel:false, showOk:false,title:'详细信息',width:300,type:'wee'});
+				}
+			    if(ajaxobj.status==2){
+					$.showErr(ajaxobj.info);
+				}
+			}
+		});
+	});
+}
+</script>
+{include file="inc/footer.html"}

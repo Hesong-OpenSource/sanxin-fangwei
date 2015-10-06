@@ -1,0 +1,100 @@
+{include file="inc/header_login_register.html"}
+<?php
+$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/user_register.css";
+$this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/user_register.js";
+$this->_var['cpagejs'][] = array();
+?>
+<link rel="stylesheet" type="text/css" href="{function name="parse_css" v="$pagecss"}" />
+<script type="text/javascript" src="{function name="parse_script" v="$pagejs" c="$cpagejs"}"></script>
+<style>
+	.nav li{float:left;}
+	.hidden{display:none;}
+	.c{color:#690}
+	.c{color:#12ADFF;}
+	.control-label{width:70px;}
+	.control-group{ float:left; overflow:visible; }
+	.holder_tip{ top:0; left:0;}
+	.dlmain { width:1000px;background:url({$TMPL}/images/images/reglog_bg.gif) #fcfcfc repeat-y; }
+	.form_lable{width:105px}
+</style>
+<div id="J_wrap">
+	<div class="blank20"></div>
+	<div class="my_shadow_bg">
+		<div class="blank"></div>
+		<div class="dlmain" style="overflow:hidden">
+			<div class="left f_l dlr" style="width:594px;_width:580px">
+				<div class="link_dash f25 dlr1">
+					<ul class="nav myLine">
+						<li class="theme_fcolor">实名认证</li>
+					</ul>
+	 			</div>
+				<div class="item c_1 hidden">
+					<form class="ajax_form_identify" action="{url r="user#do_register_two"}">
+ 						{if $user_info.is_investor==0 ||($user_info.is_investor>0&&$user_info.investor_status==2)}
+							<div class="form_row control-group">
+								<label class="form_lable small_form_lable">类型:</label>
+								<div class="f_l f14" style="margin-top:7px">
+									<label class="ui_radiobox mr10" rel="is_investor">
+										<input type="radio" name="is_investor" value="1" {if $user_info.is_investor==0||$user_info.is_investor==1}checked="checked"{/if} />个人会员
+									</label>
+									<label class="ui_radiobox" rel="is_investor">
+										<input type="radio" name="is_investor" value="2" {if $user_info.is_investor==2}checked="checked"{/if} />企业会员
+									</label>
+								</div>
+	 						</div>
+	 						<div class="blank0"></div>
+							<div class="form_row control-group">
+								<label class="form_lable" id="identify_name_str">{if $user_info.is_investor==0||$user_info.is_investor==1}个人{else}法人{/if}身份证姓名:</label>
+								<div class="pr f_l">
+									<input type="text" id="" value="{$user_info.identify_name}" class="textbox" name="identify_name" />
+									<span class="holder_tip">请输入正确身份证姓名</span>
+								</div>
+								<div class="blank0"></div>
+	 						</div>
+							<div class="form_row control-group">
+								<label class="form_lable">身份证号码:</label>
+								<div class="pr f_l">
+									<input type="text" id="" value="{$user_info.identify_number}" class="textbox" name="identify_number" />
+									<span class="holder_tip">请输入正确身份证号码</span>
+								</div>
+								<div class="blank0"></div>
+	 						</div>
+	 						<div class="blank20"></div>
+							<div class="submit_btn_row control-group">
+								<label class="form_lable small_form_lable"></label>
+								<div class="ui-button theme_bgcolor" rel="green">
+									<div>
+										<span>提交</span>
+									</div>
+								</div>
+								<input type="hidden" value="1" name="ajax" />
+								<input type="hidden" value="0" name="step" />
+							</div>
+							<div class="blank15"></div>
+						{/if}
+					</form>
+				</div>
+			</div>	
+			<div class="blank"></div>
+		</div>
+	</div>
+	<div class="blank20"></div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		show_tip();
+		resetWindowBox();
+
+		$(".c_1").show();
+		$(".n_1").addClass("c");
+		bind_ajax_form_custom(".ajax_form_identify");
+		$(".ajax_form_identify").find("label[rel='is_investor']").bind('click',function(){
+			if($(this).find("input[type='radio']").val()==2){
+				$("#identify_name_str").text("法人身份证姓名");
+			}else{
+				$("#identify_name_str").text("个人身份证姓名");
+			}
+		});	
+	});	
+</script>
+{include file="inc/footer_login_register.html"}

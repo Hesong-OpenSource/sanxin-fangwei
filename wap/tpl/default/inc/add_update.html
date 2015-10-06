@@ -1,0 +1,72 @@
+<style>
+	.fileupload .filebox{ cursor:pointer; filter:alpha(opacity=0); -moz-opacity:0; -khtml-opacity:0; opacity:0; padding:0; height:40px; width:80px; }
+</style>
+<script type="text/javascript">
+    var ROOT = '{$APP_ROOT}/m.php';
+    var VAR_MODULE = "m";
+    var VAR_ACTION = "a";
+    var WEB_SESSION_ID = '<?php echo es_session::id(); ?>';
+    var EMOT_URL = '{$APP_ROOT}/public/emoticons/';
+    var MAX_FILE_SIZE = "<?php echo (app_conf("MAX_IMAGE_SIZE")/1000000)."MB"; ?>";
+    var UPLOAD_URL ='{$APP_ROOT}/m.php?m=File&a=do_upload&upload_type=0&dir=image' ;
+	var UPLOAD_SWF='{$TMPL}/js/plupload/Moxie.swf';
+	var UPLOAD_XAP='{$TMPL}/js/plupload//Moxie.xap';
+	var ALLOW_IMAGE_EXT= "gif,jpg,jpeg,png,bmp";
+	var MAX_IMAGE_SIZE= "<?php echo (app_conf("MAX_IMAGE_SIZE")/1000000)."MB"; ?>";
+	
+	function get_file_fun(name){
+`    		$("#"+name).ui_upload({multi:false,
+		FileUploaded:function(ajaxobj){
+ 				if(ajaxobj.error==1)
+				{
+					$.show_tip(ajaxobj.info);
+				}else{
+					$("#image").val(ajaxobj.public_url);
+					$("#image_file_scr").attr('src',ajaxobj.url);
+ 				}
+			},Error:function(error){
+			$.show_tip(error.message);
+ 		}});
+	}
+	$(function(){
+		get_file_fun("image_file");
+	});
+</script>
+<div class="full">
+	<form id="add_update_form" action="{url_wap r="deal#save_update"}">
+		<div class="ul_block">
+	        <ul>
+	            <li class="textarea webkit-box">
+	                <label class="input_lable mr10">动态内容</label>
+	                <textarea placeholder="请输入动态内容" name="log_info" class="textareabox webkit-box-flex"></textarea>
+	            </li>
+	            <li class="webkit-box">
+	                <label class="input_lable mr10">相关图片</label>
+	                <div class="mr10">
+		                <label class="fileupload ui_button theme_color pr" style="font-size:1.4rem;width:80px;height:40px;">
+							<span class="ps" style="width:80px;height:40px;display:block;">选择图片</span>
+							<input type="button" class="filebox" name="image_file" id="image_file"/>
+						</label>
+						<label class="fileuploading hide" ></label>
+					</div>
+					<div class="log_image_upd">
+						<img id="image_file_scr" width="40" height="40" src="" />
+						<input type="hidden" name="image" value="" />
+					</div>
+	            </li>
+             	<li class="webkit-box">
+	                <label class="input_lable">视频链接</label>
+	                <input type="text" placeholder="请输入视频链接" name="vedio" class="textbox" value="" />
+	            </li>
+	        </ul>
+	    </div>
+		<div class="blank15"></div>
+		<div class="submit_btn_row">
+			<div class="ui-button theme_color">
+				<span>保存</span>
+			</div>
+			<input type="hidden" value="1" name="ajax" />
+			<input type="hidden" value="{$deal_info.id}" name="id" />
+		</div>			
+	</form>
+</div>

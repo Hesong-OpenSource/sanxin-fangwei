@@ -1,0 +1,112 @@
+{foreach from=$deal_new_list item=deal key=k}
+<section class="deal_item_list">
+    <a href="{$deal.url}" title="{$deal.name}">
+        <div class="deal_item_box">
+            <!--1-->
+            <div class="imgbox">
+                <img src="{if $deal.image eq ''}{$TMPL}/images/empty_thumb.gif{else}{function name="get_spec_image" v=$deal.image w="640" h="445" g="1"}{/if}" alt="{$deal.name}">
+            </div>
+            <div class="clear"></div>
+            <h3 class="deal_title sizing">{$deal.name}</h3>
+            <div class="clear"></div>
+            <!--2-->
+            <div class="paiduan">
+                <span class="caption-title">
+                    已筹资：<span class="symbol">¥</span><span class="f_money">{function name="round" v=$deal.support_amount e=2}</span>&nbsp;&nbsp; 
+                    目标：<span class="symbol" style="color:#333">¥</span><span class="f_money" style="color:#333">{function name="round" v=$deal.limit_price e=2}</span>
+                </span>
+                <span class="f_r ">
+            	{if $deal.status eq 0}
+                    <span class="common common-fail">即将开始</span>
+            	{else}
+                	{if $deal.percent >=100}
+						<span class="common common-success">已成功</span>
+					{else}
+                        {if $deal.status eq 1}
+                            <span class="common common-success">已成功</span>
+                        {/if}
+                        {if $deal.status eq 2}
+                            <span class="common common-fail">筹资失败</span>
+                        {/if}
+                        {if $deal.status eq 3}
+                            <span class="common common-sprite">筹资中</span>
+                        {/if}
+                        {if $deal.status eq 4}
+                            <span class="common common-sprite">长期项目</span>
+                        {/if}
+					{/if}
+				{/if}
+                </span>
+            </div>
+            <div class="clear"></div>
+            <!--3-->
+            <div class="deal_content_box pd">
+                <div class="ui">
+                    {if $deal.percent gte 100}
+                    <span class="common-success" style="width:100%;"></span>
+                    {else}
+                    <span class="progress" style="width:{$deal.percent}%;"></span>
+                    {/if}
+                </div>
+                <div class="blank">
+                </div>
+                {if $deal.left_begin_time>0}
+                <div class="div_dt" style="width:100%;border-right:0">
+                    <div class="f_999">离项目开始还有</div>
+                    <div class="left_time" data="{$deal.left_begin_time}">
+                        <em class="s day">--</em>
+                        <em class="l">天</em>
+                        <em class="s hour">--</em>
+                        <em class="l">时</em>
+                        <em class="s min">--</em>
+                        <em class="l">分</em>
+                        <em class="s sec">--</em>
+                        <em class="l">秒</em>
+                    </div>
+                </div>
+                <div class="div_dt_hide hide">
+                    <div class="div_dt">
+                        <span class="num">{$deal.percent}%</span><br />
+                        <span class="til">已达</span>
+                    </div>
+                    <div class="div_dt">
+                        {if $deal.remain_days >0}
+                        <span class="num">{$deal.remain_days}天</span><br />
+                        <span class="til">剩余时间</span>
+                        {else}
+                        <span class="num">{function name="to_date" v=$deal.end_time p="Y-m-d"}</span><br />
+                        <span class="til">结束时间</span>
+                        {/if}
+                    </div>
+                    <div class="div_dt" style="border:none;">
+                        <span class="num">{$deal.support_count}</span><br />
+                        <span class="til">支持者</span>
+                    </div>
+                </div>
+                {else}
+                <div class="div_dt">
+                    <span class="num">{$deal.percent}%</span><br />
+                    <span class="til">已达</span>
+                </div>
+                <div class="div_dt">
+                	
+                    {if $deal.remain_days >0}
+                    <span class="num">{$deal.remain_days}天</span><br />
+                    <span class="til">剩余时间</span>
+                    {else}
+                    <span class="num">{function name="to_date" v=$deal.end_time p="Y-m-d"}</span><br />
+                    <span class="til">结束时间</span>
+                    {/if}
+                    
+                </div>
+                <div class="div_dt" style="border:none;">
+                    <span class="num">{$deal.support_count}</span><br />
+                    <span class="til">支持者</span>
+                </div>
+                {/if}
+                <div class="blank"></div>
+            </div>
+        </div>
+    </a>
+</section>
+{/foreach}  

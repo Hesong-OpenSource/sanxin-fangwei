@@ -1,0 +1,277 @@
+{include file="inc/header.html"} 
+<?php
+$this->_var['dpagecss'][] = $this->_var['TMPL_REAL']."/css/add_item.css";
+ $this->_var['dpagejs'][] = $this->_var['TMPL_REAL']."/js/edit_deal_item.js";
+$this->_var['dcpagejs'][] = $this->_var['TMPL_REAL']."/js/edit_deal_item.js";
+$this->_var['dpagejs'][] = $this->_var['TMPL_REAL']."/js/ajaxupload.js";
+?>
+<script type="text/javascript" src="{function name="parse_script" v="$dpagejs" c="$dcpagejs"}"></script>
+<link rel="stylesheet" type="text/css" href="{function name="parse_css" v="$dpagecss"}" />
+<script type="text/javascript">
+    var ROOT = '{$APP_ROOT}/m.php';
+    var VAR_MODULE = "m";
+    var VAR_ACTION = "a";
+    var WEB_SESSION_ID = '<?php echo es_session::id(); ?>';
+    var EMOT_URL = '{$APP_ROOT}/public/emoticons/';
+    var MAX_FILE_SIZE = "<?php echo (app_conf("MAX_IMAGE_SIZE")/1000000)."MB"; ?>";
+    var UPLOAD_URL ='{$APP_ROOT}/m.php?m=File&a=do_upload&upload_type=0&dir=image' ;
+	var UPLOAD_SWF='{$TMPL}/js/plupload/Moxie.swf';
+	var UPLOAD_XAP='{$TMPL}/js/plupload//Moxie.xap';
+	var ALLOW_IMAGE_EXT= "gif,jpg,jpeg,png,bmp";
+	var MAX_IMAGE_SIZE= "<?php echo (app_conf("MAX_IMAGE_SIZE")/1000000)."MB"; ?>";
+	function get_file_fun(name){
+    		$("#"+name).ui_upload({multi:false,
+		FileUploaded:function(ajaxobj){
+ 				if(ajaxobj.error==1)
+				{
+					$.showErr(ajaxobj.info);
+				}else{
+ 					$("#image_box_outer").show();
+		   			$("#image_box").append('<div class="image_item">'+
+							'<span></span>'+
+							'<img src="'+ajaxobj.url+'" width=50 height=50 />'+	
+							'<input type="hidden" name="image[]" value="'+ajaxobj.public_url+'"  />'+	
+						'</div>');
+		   			bind_del_image();
+ 				}
+			},Error:function(error){
+			$.showErr(error.message);
+ 		}});
+	}
+	
+</script>
+<style>
+	.setmid_new {
+		margin-top: 12px;
+	}
+	#add_item_form{ display:none }
+	.control-group{position:relative;overflow:visible;float:left}
+	.holder_tip{left:105px}
+	.xqmain1000{
+		width:998px;
+		border:1px solid #dedede;
+	}
+</style>
+<div class="blank20"></div>
+<div class="location_box wrap1000">
+	<div class="location f_l">
+		<i class="fl ico loc_ico mr5"></i>
+		<label>您现在的位置：</label><a>发布产品项目</a><em>>></em><a>回报设置</a>
+	</div>
+</div>
+<div class="blank"></div>
+ <div class="xqmain xqmain1000" style="margin-top:10px;">
+	<div class="xqmain_main">	
+		<div class="page_title">
+			回报设置 - {$deal_item.name} 
+		</div>
+		<div class="switch_nav">
+			<ul>
+				<li><a href="{url r="project#edit" p="id=$deal_item.id"}">项目介绍</a></li>		
+				<li class="current"><a href="{url r="project#add_item" p="id=$deal_item.id"}">回报设置</a></li>					
+			</ul>
+		</div>		
+		<div class="blank"></div>
+		<div class="add_item_tip">				
+			<h1>小提示：</h1>
+			<ul>
+				<li>【建议设置3个以上的回报】，回报多样化更能提高关注度。</li>
+				<li>【建议设置几十、几百、上千元的支持档位】，回报差异化更能满足不同人的需求。</li>
+				<li>【建议设置有创意的回报】，与众不同的回报更能打动支持者。</li>
+			</ul>
+		</div>
+		<div class="blank"></div>
+		<div class="link_dash"></div>
+		<div class="blank"></div>
+		{if $deal_item_list}
+		<div class="full">
+			<table class="data-table">
+				<tr>
+					<th width="100">价格</th>
+					<th width="350">描述</th>
+					<th width="100">限额</th>
+					<th width="100">配送</th>
+					<th width="100">分红</th>
+					<th width="">操作</th>
+				</tr>
+				{foreach from=$deal_item_list item=item}
+				<tr class="setmid_new">
+					<td>
+						{function name="format_price" v=$item.price}
+					</td>
+					<td>{$item.description}</td>
+					<td>{if $item.is_limit_user eq 0}不限{else} {if $item.limit_user eq 0}不限{else}{$item.limit_user}位{/if}{/if}</td>
+					<td>{if $item.is_delivery eq 0}无需配送{else}运费 {if $item.delivery_fee eq 0}包邮{else}{function name="format_price" v=$item.delivery_fee}{/if}{/if}</td>
+					<td>{if $item.is_share eq 0}没有分红{else} {function name="format_price" v=$item.share_fee}{/if}</td>
+					<td>
+						<a href="{url r="project#edit_item" p="id=$item.id"}">编辑</a> &nbsp; &nbsp;
+						<a href="{url r="project#del_item" p="id=$item.id"}" class="del_item">删除</a>
+					</td>
+				</tr>
+				{/foreach}
+			</table>
+		</div>
+		<div class="blank10"></div>
+		{/if}
+		<div class="blank10"></div>
+		<div id="add_item_form">
+			<form class="ajax_form" id="item_form" action="{url r="project#save_deal_item"}" method="post">		
+			<div class="public_left">									
+				<div class="control-group">
+					<label class="control-label">支持金额:</label>
+					<div class="control-text">
+						<input type="text" value="" class="textbox" name="price" onkeyup="amount(this);" />元
+						<span class="holder_tip">请输入支持金额</span>
+					</div>
+				</div>
+				<div class="blank0"></div>
+				<div class="control-group">
+					<label class="control-label">回报内容:</label>
+					<textarea name="description" class="textareabox textbox"></textarea>
+					<span class="holder_tip">请输入回报内容</span>
+				</div>
+				<div class="blank0"></div>
+				<div class="control-group">
+					<label class="control-label">说明图片:</label>
+					<label class="fileupload" id="image_file">
+						<input type="button" class="filebox" name="image_file" style="cursor:pointer;padding:0;height:39px;width:97px;filter:alpha(opacity=0);-moz-opacity:0;-khtml-opacity:0;opacity:0"/>						
+					</label>
+					<label class="fileuploading hide"></label>
+				</div>
+				<div class="blank0"></div>	
+				<div class="control-group" style="*z-index:3;">
+					<label class="control-label">是否配送:</label>
+					<select name="is_delivery" id="is_delivery" class="ui-select field_select small">
+						<option value="0">否</option>
+						<option value="1">是</option>
+					</select>
+				</div>
+				<div class="blank0"></div>
+				<div class="control-group" id="delivery_fee_l_box" style="display:none;">
+					<label class="control-label">运费:</label>
+					<div class="control-text">
+						<input type="text" value="" class="textbox w100" name="delivery_fee" />元
+					</div>
+				</div>
+				<div class="blank0"></div>
+				<div class="control-group" style="*z-index:2;">
+					<label class="control-label">是否限购:</label>
+					<select name="is_limit_user" id="is_limit_user" class="ui-select field_select small">
+						<option value="0">否</option>
+						<option value="1">是</option>
+					</select>
+				</div>
+				<div class="blank0"></div>
+				<div class="control-group" id="limit_user_l_box" style="display:none; ">
+					<label class="control-label">限购人数:</label>
+					<div class="control-text">
+						<input type="text" value="" class="textbox w100" name="limit_user" />人
+					</div>
+				</div>
+				<div class="blank0"></div>
+				<div class="control-group" style="*z-index:1;">
+					<label class="control-label">是否分红:</label>
+					<select name="is_share" id="is_share" class="ui-select field_select small">
+						<option value="0">否</option>
+						<option value="1">是</option>
+					</select>
+				</div>
+				<div class="blank0"></div>
+				<div class="control-group" id="share_fee_l_box" style="display:none; ">
+					<label class="control-label">分红金额:</label>
+					<div class="control-text">
+						<input type="text" value="" class="textbox w100" name="share_fee" />元
+					</div>
+				</div>
+				<div class="blank0"></div>
+				<div class="control-group">
+					<label class="control-label">确认回报时间:</label>
+					<div class="control-text">
+						<span class="f_666 mr10 f_l">回报发放成功后</span>
+						<input type="text" value="" class="textbox w100" name="repaid_day" />天
+					</div>
+				</div>
+			</div>
+			<!--end left-->
+			<div class="public_right" style="width:350px">
+				<div class="deal_preview_title">编辑预览</div>
+				<div class="blank10"></div>
+				<div class="item_preview">
+					<div id="support_price_box">
+						支持￥<span id="support_price">0</span>元
+						<div class="blank"></div>
+					</div>						
+					<div class="f14">
+						0位支持者&nbsp;&nbsp;&nbsp;&nbsp;<span id="limit_user_box" style="display:none;">限额<span id="limit_user">0</span>位,剩余<span id="remain_user">0</span>位</span>
+						<div class="blank"></div>
+					</div>
+					<div id="repaid_content" class="f14">回报内容</div>			
+					<div id="image_box_outer" style="display:none;">
+						<div class="blank"></div>	
+						<div id="image_box"></div>	
+						<div class="blank1"></div>					
+					</div>
+					<div id="repaid_day_box"  class="f14">
+						<div class="blank"></div>
+						预计回报发放时间：项目成功结束后<span id="repaid_day">0</span>天内
+					</div>
+					<div id="delivery_box" class="f14">
+						<div class="blank"></div>
+						运费 ￥<span id="delivery_fee_box">0</span>
+					</div>
+					<div id="share_box" class="f14">
+						<div class="blank"></div>
+						分红￥<span id="share_fee_box">0</span>
+					</div>
+					<div class="blank10"></div>
+					<div class="ui-button_green">
+						<div>
+							<span>支持￥<font id="support_price_btn">0</font>元</span>
+						</div>
+					</div>
+					<div class="blank1"></div>
+				</div>
+			</div>
+			<!--end right-->
+			<div class="blank10"></div>
+			<div class="add_item_btn control-group" style="padding-left:10px">
+				<label class="control-label"></label>
+				<div class="ui-button theme_bgcolor f_l" rel="green">
+					<div>
+						<span>保存新的回报项目</span>
+					</div>
+				</div>
+				<a href="javascript:void(0);" id="cancel_add" style="color:#999">取消添加</a>
+			</div>
+			<div class="blank0"></div>
+			<input type="hidden" name="deal_id" value="{$deal_item.id}" />
+			<input type="hidden" name="ajax" value="1" />
+			</form>
+		</div>
+		<div class="blank20"></div>
+		<div id="add_item_row">
+			<div class="add_item_btn f_l" id="add_item_btn">
+				<div class="ui-button theme_bgcolor" rel="gray">
+					添加新的回报项目
+				</div>
+			</div>
+			<div class="add_item_btn f_l" id="submit_deal_btn" url="{url r="project#submit_deal" p="id=$deal_item.id"}" jump="{url r="account#project"}" style="margin-left:10px;">
+				<div class="ui-button theme_bgcolor" rel="green">
+					<div>
+						<span>提交审核</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="blank40"></div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		get_file_fun('image_file');
+		show_tip();
+	});
+</script>
+{include file="inc/footer.html"} 
+
+

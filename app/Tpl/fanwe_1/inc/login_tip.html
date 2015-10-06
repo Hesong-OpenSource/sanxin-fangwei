@@ -1,0 +1,86 @@
+<div class="login_tip">	
+	{if $user_info}
+ 	<span>
+		<a href="javascript:void(0);" id="mymessage" style="padding: 0 6px;
+	border-right: 1px solid #d2d2d2; display:none;">消息 <b class="head_down_icon"></b></a>
+		<a href="javascript:void(0);" id="mycenter" style="">{function name="msubstr" v=$user_info.user_name b=0 e=10}<s class="icon_arrow icon_arrow_down"></s></a>
+		<i class="line"></i>
+		<a href="{url r="user#loginout"}" title="退出" id="user_login_out" style="padding: 0 6px; ">退出</a>
+		{if $app}
+		<a href="javascript:void(0);" id="zc_phone" class="zc_phone pr">
+			手机众筹<s class="icon_arrow icon_arrow_down"></s>
+		</a>
+		{/if}
+	</span>
+	<div id="mymessage_drop" style="position:absolute; display:none;">
+		<div class="drop_box">
+			<span><a href="{url r="news#fav"}">关注动态</a></span>
+			<span><a href="{url r="comment"}">查看评论</a></span>
+			<span><a href="{url r="message"}">查看私信</a></span>
+			<span class="last"><a href="{url r="notify"}">查看通知({$USER_MESSAGE_COUNT})</a></span>
+		</div>
+	</div>
+	<div id="mycenter_drop" style="position:absolute; display:none;">
+		<div class="drop_box mycenter_drop">
+			<span><a href="{url r="home" p="id=$user_info.id"}">我的主页</a></span>
+			<span><a href="{url r="home"}">账户管理</a></span>
+			<span><a href="{if app_conf("INVEST_STATUS") eq 0 || app_conf("INVEST_STATUS") eq 1}{url r="account#index"}{/if}{if app_conf("INVEST_STATUS") eq 2}{url r="account#mine_investor_status"}{/if}">项目管理</a></span>
+			<span><a href="{url r="settings"}">个人设置</a></span>
+			<span><a href="{url r="news#fav"}">关注动态</a></span>
+			<span><a href="{url r="comment"}">查看评论</a></span>
+			<span><a href="{url r="message"}">查看私信{if $USER_MESSAGE_COUNT>0}({$USER_MESSAGE_COUNT}){/if}</a></span>
+			<span class="last"><a href="{url r="notify"}">查看通知{if $USER_NOTIFY_COUNT>0}({$USER_NOTIFY_COUNT}){/if}</a></span>
+		</div>
+	</div>
+	
+	{else}
+	<span>
+		<a title="登录" href="javascript:void(0)" style="padding: 0 6px; " onclick="javascript:show_pop_login();" id="show_pop_login">登录</a>
+		<i class="line"></i>
+		{if app_conf("USER_INVESTMENT") eq 1}
+			<a href="{url r="user#register"}" title="创业者注册" style="padding:0 6px;">创业者注册</a><i class="line"></i>
+			<a href="{url r="user#register"}" title="投资者注册" style="padding:0 6px;">投资者注册</a>
+		{/if}
+		{if app_conf("USER_INVESTMENT") eq 0}
+			<a href="{url r="user#register"}" title="注册" style="padding: 0 6px; ">注册</a>
+		{/if}
+		{if $app}
+		<a href="javascript:void(0);" id="zc_phone" class="zc_phone pr">
+			手机众筹<s class="icon_arrow icon_arrow_down"></s>
+		</a>
+		{/if}
+	</span>
+	
+	{/if}
+	<div id="zc_phone_drop" style="position:absolute; display:none;">
+		<div class="zc_phone_drop">
+			{if $app['is_apk']}
+			<div class="zc_phone_box android">
+				<h3><i class="icon iconfont">&#xe600;</i>安卓端</h3>
+				<img src="{$app.apk_url_logo}" alt="安卓端" />
+			</div>
+			{/if}
+			{if $app['is_ios']}
+			<div class="zc_phone_box ios" style="margin-right:0">
+				<h3><i class="icon iconfont">&#xe602;</i>苹果端</h3>
+				<img src="{$app.ios_url_logo}" alt="苹果端" />
+			</div>
+			{/if}
+		</div>
+	</div>
+</div> 
+{if $USER_NOTIFY_COUNT>0 or $USER_MESSAGE_COUNT>0}
+	{if $HIDE_USER_NOTIFY eq 0}
+		<div id="user_notify_tip" style="position:absolute; z-index:1; display:none; margin-top:45px;">		
+			<div class="notify_tip_box1" id="close_user_notify">
+				<div class="close_user_notify1"></div>
+				{if $USER_NOTIFY_COUNT>0}
+				<span><a href="{url r="notify"}">您有 <font>{$USER_NOTIFY_COUNT}</font> 条新通知</a></span>
+				{/if}
+				{if $USER_MESSAGE_COUNT>0}
+				<span><a href="{url r="message"}">您有 <font>{$USER_MESSAGE_COUNT}</font> 条新信息</a></span>
+				{/if}
+			</div>
+		</div>
+	{/if}
+{/if}

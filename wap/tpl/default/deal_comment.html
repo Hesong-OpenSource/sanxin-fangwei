@@ -1,0 +1,140 @@
+{include file="inc/header.html"} 
+<style>
+	body{background: #f4f4f4;}
+</style>
+<div class="selectbox1" id="selectbox1">
+    <div class="selectbox" id="selectbox">
+    </div>
+    <div class="selectbj">
+        <div class="searchbox">
+        <form action="" method="get">
+        <div class="search">
+        <div class="seach_text">
+            <input type="text" placeholder="搜索">
+        </div>
+        <input class="seach_submit" style="z-index:5;position: absolute;" type="button">
+        <div class="seach_submit"><i class="fa fa-search"></i></div>
+        <div class="blank"></div> 
+        </div>
+        </form>
+        </div>
+        <dl>
+        <dt>属性</dt>
+        <dd><a href=" ">即将开始</a></dd>
+        <dd class="c24"><a href=" ">预订中</a></dd>
+        <dd class="c23"><a href="">预订结束</a></dd>
+        <div ></div>
+        </dl>
+        <p class="cl"></p>
+        <dl>
+        <dt>分类</dt>
+        <dd><a href=" " id="category_927158">医疗健康</a></dd>
+        <dd class="c24"><a href=" " id="category_927151">家居生活</a></dd>
+        <dd class="c23"><a href=" " id="category_927162">出行定位</a></dd>
+        <dd><a href=" " id="category_927218">影音娱乐</a></dd>
+        <dd class="c24"><a href=" " id="category_927219">科技外设</a></dd>
+        <dd class="c23"><a href=" " id="category_927220">其他分类</a></dd>
+        </dl>   
+        <div class="blank"></div> 
+        </div>    
+    <div class="blank"></div> 
+    </div>
+</div>
+<div class="dsc_titile">
+    {$deal_info.name}
+    <span class="dsc_titrt"><i class="fa fa-angle-right "></i></span>
+</div>
+
+<!--中间部分-->  
+<div class="wraper discussion">
+	<div class="critical_ul">
+		<input id="post_url" type="hidden" value="{$comment_list[1].save_url_wap}"/>
+		<input id="deal_id" type="hidden" value="{$comment_list[0].deal_id}"/>
+        <ul>
+        	{foreach from=$comment_list item=comment name=comments}
+        	{if $smarty.foreach.comments.iteration mod 2 eq 1}
+		  	<li>
+                <div class="uer_pic">{function name="show_avatar" p="$comment.user_id" t="small"}</div>
+                <div class="comment">
+                    <h4>{$comment.user_name}{if $deal_info.user_name eq $comment.user_name}<span>发起人</span>{else}&nbsp;&nbsp;&nbsp;&nbsp;{/if}<em>{function name="pass_date" v=$comment.create_time}</em></h4>
+                    <div class="details">
+                        <div class="lov1"></div>
+                        <p>
+                            {function name="nl2br" v=$comment.content}
+							</br>
+							<a href="javascript:void(0);" class="linkgreen replycomment" rel="{$comment.id}" onclick="javascript:focus_event(this,'{$comment.user_name}');">回复</a>
+                        </p>
+                    </div>
+                </div>
+			</li>
+			{/if}
+   			{if $smarty.foreach.comments.iteration mod 2 eq 0}
+			<li class="dsc_mine">  
+                <div class="comment">
+                    <h4>{$comment.user_name}{if $deal_info.user_name eq $comment.user_name}<span>发起人</span>{else}&nbsp;&nbsp;&nbsp;&nbsp;{/if}<em>{function name="pass_date" v=$comment.create_time}</em></h4>
+                    <div class="details">
+                        <p>
+                 			{function name="nl2br" v=$comment.content}
+							</br>
+								<a href="javascript:void(0);" class="linkgreen replycomment" rel="{$comment.id}" onclick="javascript:focus_event(this,'{$comment.user_name}');">回复</a>
+                        </p>
+                         <div class="lov2"></div>
+                    </div>
+                </div>
+        		<div class="uer_pic">{function name="show_avatar" p="$comment.user_id" t="small"}</div>
+	 		</li>
+			{/if}
+            {/foreach}
+        </ul>
+    </div>
+</div>
+<div class="alwaysfoot dsc_pd">
+    <div class="dsc_dialogbox">
+	    <div class="dsc_inputk">
+		    <input class="dsc_input" name="content" id="content" type="text" placeholder="输入内容···"/>
+			<input type="hidden" name="ajax" id="ajax" value="1" />
+			<input type="hidden" name="comment_pid" id="comment_pid" value="0" />
+	    </div>
+    	<input class="dsc_send" type="button" value="发送" onclick="javascript:event_send()"/>
+    </div>
+</div>
+<!--底部-->  
+<div class="foot" id="foot" style="border:none;background:none;">
+</div>
+<script type="text/javascript">
+	function event_send(){
+		var content=$("#content").val();
+		var ajax=$("#ajax").val();
+		var post_url=$("#post_url").val();
+		var id=$("#deal_id").val();
+		var pid=$("#comment_pid").val();
+		
+		var query=new Object();
+		query.content=content;
+		query.ajax=ajax;
+		query.id=id;
+		query.pid=pid;
+		$.ajax({
+			url:post_url,
+			dataType:"json",
+			data:query,
+			type:"post",
+			success:function(data){
+				if(data.status==1){
+					alert("发送成功!");
+					window.location.reload();
+				}
+			},error:function(){
+				alert("系统繁忙，稍后请重试!");
+			}
+		});
+		return false;
+	}
+	function focus_event(obj,username){
+		var pid=$(obj).attr("rel");
+		$("#comment_pid").val(pid);
+		$("#content").val("回复 "+username+":");
+		$("#content").focus();
+	}
+</script>
+{include file="inc/footer.html"}

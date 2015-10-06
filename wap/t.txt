@@ -1,0 +1,18 @@
+array (
+  'id' => '44',
+  'code' => '00132a108d7ca03e518e330a6c5bfffa',
+  'state' => '1',
+)
+array (
+  'openid' => 'ovxqNjg18vCv2nPtcRTDFbXmaaf4',
+  'nickname' => '林运明',
+  'sex' => 1,
+  'language' => 'zh_CN',
+  'city' => '福州',
+  'province' => '福建',
+  'country' => '中国',
+  'headimgurl' => 'http://wx.qlogo.cn/mmopen/JVDECnNjedGibohpu1iamIpIeUZnHiaYQ4MjQ4ib3XpKy6lql7Xq4y3uricQt07Q9OcXLSTTYyg7HECNdHav3VvK12g/0',
+  'privilege' => 
+  array (
+  ),
+)

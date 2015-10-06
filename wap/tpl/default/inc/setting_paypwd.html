@@ -1,0 +1,67 @@
+<div class="setting_security_box" id="setting-pass-box">
+	<form id="ajax_form_paypassword" action="{url_wap r="settings#paypassword_binding"}">
+		<div class="ul_block">
+			<ul>
+				<li class="webkit-box">
+					<label class="input_lable">支付密码：</label>
+					<input type="password" placeholder="请输入支付密码" id="" value="" name="paypassword" class="textbox webkit-box-flex" />
+				</li>
+				<li class="webkit-box">
+					<label class="input_lable">确认密码：</label>
+					<input type="password" placeholder="请输入确认密码" id="" value="" name="confirm_pypassword" class="textbox webkit-box-flex" />
+				</li>
+				<li class="webkit-box">
+					<label class="input_lable">手机号：</label>
+					<div class="smaller_form_cont">{function name="hideMobile" v=$user_info.mobile}</div>
+				</li>
+				<li class="last webkit-box">
+					<input type="text" placeholder="请输入手机验证码" value="" name="verify" class="textbox webkit-box-flex mr5" />
+					<input type="button" value="获取验证码" class="code_btn bg_red" id="J_send_sms_verify_pay" />
+				</li>
+			</ul>
+			<div class="blank10"></div>
+			<div class="submit_btn_row">
+				<div class="ui-button theme_color" rel="green">提交</div>
+				<input type="hidden" value="1" name="ajax" />
+				<input type="hidden" value="0" name="step" />
+			</div>
+			<div class="blank10"></div>
+		</div> 
+	</form>
+</div>
+<script type="text/javascript">
+	$("#J_send_sms_verify_pay").bind("click",function(){
+		send_mobile_verify_sms_custom(2,'',"#J_send_sms_verify_pay");
+	});
+	$("#ajax_form_paypassword .ui-button").bind('click',function(){
+		var $obj=$(this).parent().parent().parent();
+		var paypassword=$obj.find("input[name='paypassword']").val();
+		var confirm_pypassword=$obj.find("input[name='confirm_pypassword']").val();
+		var verify=$obj.find("input[name='verify']").val();
+		if($.trim(paypassword)){
+			if(paypassword.length <= 5){
+				$.show_tip("支付密码长度不少于6位");
+				return false;
+			}
+		}
+		else{
+			$.show_tip("请输入支付密码");
+			return false;
+		}
+		if($.trim(confirm_pypassword)){
+			if($.trim(confirm_pypassword) != $.trim(paypassword)){
+				$.show_tip("两次输入密码不一致");
+				return false;
+			}
+		}
+		else{
+			$.show_tip("请输入确认密码");
+			return false;
+		}
+		if($.trim(verify) == ""){
+			$.show_tip("请输入手机验证码");
+			return false;
+		}
+		ajax_form("#ajax_form_paypassword");
+	});
+</script>

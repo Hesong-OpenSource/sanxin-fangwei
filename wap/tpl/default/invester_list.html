@@ -1,0 +1,308 @@
+{include file="inc/header_account.html"}
+<style type="text/css">
+body{background:#fff;}
+.leader{
+	overflow:hidden;
+}
+.leader h3{
+	height:30px;
+	line-height:30px;
+	font-size:1.8rem;
+	border-bottom:1px solid #cecece;
+}
+.leader h3 .f_r{
+	font-size:1.3rem;
+}
+.leader .l{
+	width:70px;
+	text-align:center;
+}
+.leader .l img{
+	width:70px;
+	height:70px;
+	margin:0;
+	-moz-border-radius:50%; -khtml-border-radius:50%; -webkit-border-radius:50%; border-radius:50%;
+}
+.leader .r .btn_send{
+	font-size:1.3rem;
+	color:#666;
+}
+.leader .r .btn_send i{font-size:1.4rem;}
+.leader .title{
+	color:#333;
+}
+.leader .text{
+	font-size:1.3rem;
+	color:#666;
+	border-bottom:1px solid #e5e5e5;
+	padding:10px 15px;
+	background:#fff;
+}
+.leader .text:last-child{
+	border-bottom:1px solid #cecece;
+}
+.ui-button1{
+	width:120px;
+	height:30px;
+	line-height:32px;
+	font-size:1.5rem;
+}
+.select_box{
+	height:30px;
+	line-height:30px;
+	text-align:center;
+	border:1px solid #ddd;
+	margin:-1px;
+}
+.tab_nav li{
+	background:#fff;
+}
+.choose_box{
+	background:#f1f1f1;
+	display:none;
+}
+.choose_2{
+	padding:10px;
+	background:#fff;
+}
+.choose_2 .con2_l{
+	height:28px;
+	line-height:28px;
+}
+.choose_2 a{
+	display:block;
+	height:28px;
+	line-height:28px;
+	float:left;
+	padding:0 5px;
+	border-radius:3px;
+	margin:0 5px;
+	color:#666;
+}
+.choose_2 a:hover ,
+.choose_2 a.cur {
+	background:#4dbdf5;
+	color:#fff;
+}
+.choose_2,.choose_show,select{font-size:1.3rem}
+.user_icon{margin:2px 5px 0 0;}
+</style>
+<section class="choose_box" id="choose_box">
+	<ul class="choose_1 tab_nav webkit-box" style="width:100%">
+		<li class="webkit-box-flex tc">
+			<select name="province" id="cityid-1">
+		  		<option value="" rel="0">请选择省份</option>
+				{foreach from=$region_lv2 item=region}
+				<option {if $p_loc eq $region.name}selected="selected"{/if} rel="{$region.id}" value="{$region.url}">{$region.name}</option>
+				{/foreach}				 
+			</select>
+			<i class="fa fa-angle-down"></i>
+		</li>
+		<li class="webkit-box-flex tc ">
+			<select name="city" id="cityid-2">
+		  		<option value="" rel="0">请选择城市</option>
+				{foreach from=$region_lv3 item=region}
+				<option class="ld-option" value="{$region.url}" {if $p_city eq $region.name}selected="selected"{/if}>{$region.name}</option>
+				{/foreach}				    
+			</select>
+			<i class="fa fa-angle-down"></i>
+		</li>
+	</ul>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#cityid-1,#cityid-2").change(function(){
+				window.location.href = $(this).val();
+			});
+		});
+	</script>
+	<div class="blank10"></div>
+	<div class="choose_2 webkit-box">
+		<div class="con2_l">投资人类型：</div>
+	    <div class="con2_r webkit-box-flex" id="invest_type">
+	    	<a href="{url_wap r="investor#invester_list" p="loc=$p_loc"}"  {if $p_r eq ''} class="cur"{/if}>全部</a>
+			<a href="{url_wap r="investor#invester_list" p="r=institutions_invester&loc=$p_loc"}" value="1" {if $p_r eq 'institutions_invester'} class="cur"{/if}>机构投资人</a>
+	        <a href="{url_wap r="investor#invester_list" p="r=invester&loc=$p_loc"}" value="2" {if $p_r eq 'invester'} class="cur"{/if}>投资人</a>
+			{if app_conf('AVERAGE_USER_STATUS') eq 1 || INVEST_TYPE==1}
+	       		<a href="{url_wap r="investor#invester_list" p="r=ordinary_user&loc=$p_loc"}" value="0" {if $p_r eq 'ordinary_user'} class="cur"{/if}>普通用户</a>
+			{/if}
+	        <div class="blank0"></div>
+	    </div>
+	    <div class="clear"></div>
+	</div>
+	<div class="choose_2 webkit-box">
+	 	<div class="con2_l">按所属城市：</div>
+	    <div class="con2_r webkit-box-flex" id="invest_type">
+			<a href="{url_wap r="investor#invester_list" p="r=$p_r"}"  {if $p_loc eq ''}class="cur"{/if} target="_self"  value="">全部</a>		
+			{foreach from=$city_list item=city_item}
+			{if $city_item.province neq ''}
+		        <a href="{$city_item.url}" target="_self" value="" {if $p_loc eq $city_item.province}class="cur"{/if} >{$city_item.province}</a>
+			{/if}
+		    {/foreach}	
+	    </div>
+	</div>
+	<div class="blank10"></div>
+</section>
+<section class="leader">
+	<h3 class="theme_fcolor pl10 pr10">
+		<a href="javascript:void(0);" class="f_r choose_show" id="choose_show">筛选<i class="fa fa-angle-up ml5"></i></a>
+	</h3>
+	{foreach from=$invester_list item=invester_item}
+	<div class="text">
+		<div class="webkit-box">
+			<div class="l mr10">
+				<div><img src="{$invester_item.image}" /></div>
+				<div class="blank5"></div>
+			</div>
+			<div class="r webkit-box-flex">
+				<div style="height:70px">
+					<div class="blank5"></div>
+					<span class="user_name f_l mr5">{$invester_item.user_name}</span>
+					<!-- 会员等级，投资人类型图标 -->
+					{if $invester_item.user_icon}
+					<div class="user_icon f_l">
+	                	<img src="{$invester_item.user_icon}" alt="会员等级" class="inline_level_icon level_icon" />
+	                </div>
+					{/if}
+					<div class="{if $invester_item.is_investor gt 0}user_icon f_l{/if}">
+						{if $invester_item.is_investor==1}
+						<i class="fa fa-user" rel="个人投资者"></i>
+						{/if}
+						{if $invester_item.is_investor==2}
+						<i class="fa fa-building-o" rel="机构投资者"></i>
+						{/if}
+					</div>
+					<div class="blank5"></div>
+					
+										
+					<div class="conment">
+						<div>
+							{if $invester_item.province}<i class="fa fa-map-marker"></i>&nbsp;{$invester_item.province}{$invester_item.city}&nbsp;&nbsp;|&nbsp;&nbsp;{/if}<a href="javascript:void(0)" onclick="invester_look({$invester_item.id},this)" class="theme_fcolor" id="detailed_information">查看详细<i class="fa fa-angle-double-right"></i></a>
+						</div>
+						<a href="javascript:void(0);" onclick="send_message({$invester_item.id})" class="btn_send f14 b_radius3"><i class="fa fa-envelope mr5"></i>发私信</a>
+					</div>
+				</div>
+				<div class="blank5"></div>
+				<a href="javascript:void(0)" rel="{$invester_item.id}" name="recommend_project" class="ui-button ui-button1 f_r {if $invester_item.id eq $user_info.id}bg_gray{else}theme_color{/if}">自荐我的项目</a>
+				
+			</div>
+		</div>
+	</div>
+	{/foreach}
+</section>
+<div class="blank15"></div>
+<div class="pages">{$pages}</div>
+<div class="blank30"></div>
+<script type="text/javascript">
+	$(function(){
+		$("#choose_show").bind('click',function(){
+			if($("#choose_box").is(":hidden")){
+				$("#choose_box").slideDown(200);
+				$(this).html('筛选<i class="fa fa-angle-down ml5"></i>');
+			}
+			else{
+				$("#choose_box").slideUp(200);
+				$(this).html('筛选<i class="fa fa-angle-up ml5"></i>');
+
+			}
+		})
+
+		var hideList_height = $(document).height();
+		$(".hide_list").css("height",hideList_height+"px");
+		
+		$(".mall-cate>li").each(function(index){
+			var $this = $(this);
+			$this.bind({
+				click:function(e){
+					e.stopPropagation();
+					// 初始化
+					$(".abbr").removeClass("webkit-box");
+					$(".hide_list").hide()
+					$("#second_list>ul").hide();
+					if(!($this.hasClass("cur"))){
+						$this.addClass("cur").siblings().removeClass("cur");
+						$(".hide_list").show().find(".abbr").eq(index).addClass("webkit-box").find("#second_list>ul").eq(index).show();
+						$("#first_list li").each(function(index){
+							var $this = $(this);
+							$this.click(function(e){
+								e.stopPropagation();
+								$(".second_list>ul").hide();
+								$this.addClass("select").siblings().removeClass("select");
+								$(".second_list>ul").eq(index).show();
+							})
+						})
+					}
+					else{
+						$this.removeClass("cur");
+						$(".abbr").eq(index).removeClass("webkit-box");
+					}
+				} ,
+				change:function(){
+					
+				}
+			});
+		});
+		$(".abbr").bind("click",function(e){
+			e.stopPropagation();
+		});
+		$(document).click(function(){
+			$(".mall-cate>li").removeClass("cur");
+			$(".abbr").removeClass("webkit-box");
+			$(".hide_list").hide();
+			$("#second_list>ul").hide();
+		})
+
+		ajax_get_recommend_project();
+	});
+
+	// 查看详细资料
+	function invester_look(id,obj){			
+		var ajaxurl = APP_ROOT+"/index.php?ctl=ajax&act=investor_detailed_information&id="+id;
+		$.ajax({
+			url: ajaxurl,
+			dataType: "json",
+			type: "POST",
+			success:function(data){
+				if(data.status == 1){
+					$.weeboxs.open(data.html, {boxid:'append_money',contentType:'text',showButton:false, showCancel:false, showOk:false,title:data.user_name+'详细资料',width:300,type:'wee'});
+				}
+			}
+		});
+	}	
+
+	// 获取会员所有项目列表
+	function ajax_get_recommend_project(){
+		$("a[name='recommend_project']").bind("click",function(){
+			if($(this).attr("rel")=='{$user_info.id}'){
+				$.showErr("不能给自己推荐！");
+				return false;
+			}
+			var ajaxurl ='{url_wap r="ajax#ajax_get_recommend_project"}';
+			var query=new Object();
+			//推荐人id
+			query.id='{$user_info.id}';
+			//被推荐人id
+			query.user_id=$(this).attr("rel");
+			$.ajax({
+				url: ajaxurl,
+				dataType: "json",
+				data:query,
+				type: "POST",
+				success:function(ajaxobj){
+					if(ajaxobj.status==0){
+						show_pop_login();
+						return false;
+					}
+					if(ajaxobj.status==1){
+						$.showErr(ajaxobj.info);
+						return false;
+					}
+					if(ajaxobj.status==2){
+						$.weeboxs.open(ajaxobj.html, {boxid:'project_recommend_page',contentType:'text',showButton:false, showCancel:false, showOk:false,title:'我的项目',width:300,type:'wee'});
+						return false;
+					}
+				}
+			});
+		});
+	}
+</script>
+{include file="inc/footer.html"}

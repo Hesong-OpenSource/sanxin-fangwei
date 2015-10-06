@@ -1,0 +1,72 @@
+<div class="setting_security_box" id="setting_mobile_box">
+	<form id="ajax_form_mobile" action="{url_wap r="settings#mobile_binding"}">
+		<div class="ul_block">
+			<ul>
+				{if $user_info.mobile}
+				<li class="webkit-box">
+					<label class="input_lable">原手机号：</label>
+					<div class="smaller_form_cont">{function name="hideMobile" v=$user_info.mobile}</div>
+				</li>
+				<li class="webkit-box">
+					<input type="text" placeholder="请输入验证码" value="" name="verify_coder" class="textbox webkit-box-flex mr5" />
+					<input type="button" value="获取验证码" class="code_btn bg_red" id="J_send_sms_verify" />
+					<input type="hidden" id="settings-mobile-type" name="step" value="2">
+				</li>
+				<li class="webkit-box last">
+					<label class="input_lable">新手机号：</label>
+					<input type="number" placeholder="请输入新手机号" id="settings-new-mobile" value="" name="mobile" class="textbox webkit-box-flex" />
+				</li>
+				<input type="hidden" name="bind_mobile" value="0" />
+				{else}
+				<li class="webkit-box">
+					<label class="input_lable">手机号：</label>
+					<input type="number" placeholder="请输入手机号" id="settings-mobile" value="" name="mobile" class="textbox webkit-box-flex" />
+				</li>
+				<li class="last webkit-box">
+					<input type="text" placeholder="请输入验证码" value="" name="verify_coder" class="textbox webkit-box-flex mr5" />
+					<input type="button" value="获取验证码" class="code_btn bg_red" id="J_send_sms_verify" />
+					<input type="hidden" id="settings-mobile-type" name="step" value="1">
+				</li>
+				<input type="hidden" name="bind_mobile" value="1" />
+				{/if}
+			</ul>
+			<div class="blank15"></div>
+			<div class="submit_btn_row">
+				<input type="button" value="提交" name="setting_mobile" class="ui-button theme_color sizing" id="setting_mobile"  />
+				<input type="hidden" value="1" name="ajax" />
+			</div>
+			<div class="blank15"></div>
+		</div>
+	</form>
+</div>
+<script type="text/javascript">
+	$("#J_send_sms_verify").bind("click",function(){
+		send_mobile_verify_sms_custom($.trim($("#settings-mobile-type").val()),$.trim($("#settings-mobile").val()),"#J_send_sms_verify");
+	});
+
+	$("#ajax_form_mobile .ui-button").bind('click',function(){
+		var $obj=$(this).parent().parent().parent();
+		var mobile=$obj.find("input[name='mobile']").val();
+		var verify_coder=$obj.find("input[name='verify_coder']").val();	
+		{if $user_info.mobile}
+			if($.trim(verify_coder) == ""){
+				$.show_tip("请输入手机验证码");
+				return false;
+			}
+			if($.trim(mobile) == ""){
+				$.show_tip("请输入新手机号");
+				return false;
+			}
+		{else}
+			if($.trim(mobile) == ""){
+				$.show_tip("请输入手机号");
+				return false;
+			}
+			if($.trim(verify_coder) == ""){
+				$.show_tip("请输入手机验证码");
+				return false;
+			}
+		{/if}
+		ajax_form("#ajax_form_mobile");
+	});
+</script>

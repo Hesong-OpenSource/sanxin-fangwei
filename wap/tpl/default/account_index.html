@@ -1,0 +1,73 @@
+{include file="inc/header_account.html"}
+<?php
+    $this->_var['dpagejs'][] = $this->_var['TMPL_REAL']."/js/order_list.js";
+    $this->_var['dcpagejs'][] = $this->_var['TMPL_REAL']."/js/order_list.js";
+?>
+<script type="text/javascript" src="{function name="parse_script" v="$dpagejs" c="$dcpagejs"}"></script>
+<!--中间部分-->  
+{if $order_list}
+<section class="account_index my_project account_mod">
+    <ul>
+    	{foreach from=$order_list item=order_item}
+        <li>
+            <div class="webkit-box">
+                <div class="pic_show mr5">
+                    <a href="{url_wap r="deal#show" p="id=$order_item.deal_id"}" title="{$order_item.deal_name}"><img src="{function name="get_spec_image" v=$order_item.deal_info.image w=60 h=45 g=1}" width="100%" height="100%"></a>
+                </div>
+                <div class="details webkit-box-flex">
+                    <h3 class="info_name">
+                        <a href="{url_wap r="deal#show" p="id=$order_item.deal_id"}" title="{$order_item.deal_name}">{function name="msubstr" v=$order_item.deal_name b=0 e=25}</a>
+                    </h3>
+                    <div class="info_all">
+                        <div class="info_group">
+                            <label class="label_l">金额:</label>&nbsp;
+                            <span class="symbol">¥</span><span class="f_money">{$order_item.total_price}</span>
+                        </div>
+                        <div class="info_group">
+                            <label class="label_l">状态:</label>&nbsp;
+                            <span class="label_r">
+                                {if $order_item.order_status eq 0}
+                                余额预支付<span class="f_red">{function name="format_price" v=$order_item.credit_pay}</span>&nbsp;支付未完成
+                                {else}      
+                                    {if $order_item.deal_info}
+                                    {if $order_item.deal_info.is_success eq 1}
+                                        {if $order_item.deal_info.begin_time > $now}未开始{/if}
+                                        {if $order_item.deal_info.end_time < $now and $order_item.deal_info.end_time neq 0}已成功&nbsp;{if $order_item.repay_time gt 0}回报已发放{if $order_item.repay_make_time gt 0} &nbsp;  确认收到{else} &nbsp; 未确认收到{/if} {else}等待发放回报{/if}{/if}
+                                        {if $order_item.deal_info.begin_time < $now and ($order_item.deal_info.end_time > $now or $order_item.deal_info.end_time eq 0)}已成功&nbsp;{if $order_item.repay_time gt 0}回报已发放{if $order_item.repay_make_time gt 0} 确认收到{else} 未确认收到{/if}{else}等待发放回报{/if}{/if}
+                                        {else}
+                                        {if $order_item.deal_info.begin_time > $now}未开始{/if}
+                                        {if $order_item.deal_info.end_time < $now and $order_item.deal_info.end_time neq 0}未成功&nbsp;{if $order_item.is_refund eq 1}已退款{else}等待退款{/if}{/if}
+                                        {if $order_item.deal_info.begin_time < $now and ($order_item.deal_info.end_time > $now or $order_item.deal_info.end_time eq 0)}未结束{/if}
+                                    {/if}
+                                    {else}
+                                        {if $order_item.is_success eq 0}
+                                        未成功&nbsp;{if $order_item.repay_time gt 0}回报已发放{if $order_item.repay_make_time gt 0}<br /> 确认收到{else} <br /> 未确认收到{/if}{else}等待发放回报{/if}
+                                        {else}
+                                        已成功&nbsp;{if $order_item.is_refund eq 1}已退款{else}等待退款{/if}
+                                        {/if}
+                                    {/if}
+                                {/if}
+                            </span>
+                        </div>
+                    </div>
+                </div>   
+            </div>
+            <div class="blank5"></div>
+            <div class="operating f_r webkit-box">
+                {if $order_item.order_status eq 0}
+                <div class="pay bg_red" onclick="window.location.href='{url_wap r="account#view_order" p="id=$order_item.id"}';">继续支付</div>
+                <a class="pay del_deal ml5 bg_gray" href="{url_wap r="account#del_order" p="id=$order_item.id"}">删除</a>
+                {else}
+                 <div class="pay theme_color" onclick="window.location.href='{url_wap r="account#view_order" p="id=$order_item.id"}';">查看详情</div>
+                {/if} 
+            </div>
+        </li>
+	   {/foreach}
+    </ul>
+</section>
+<div class="blank15"></div>
+<div class="pages">{$pages}</div>
+<div class="blank15"></div>
+{else}
+{/if}
+{include file="inc/footer.html"}

@@ -1,0 +1,137 @@
+{include file="inc/header_account.html"} 
+<?php
+	$this->_var['dpagejs'][] = $this->_var['TMPL_REAL']."/js/deal_publish.js";
+	$this->_var['dcpagejs'][] = $this->_var['TMPL_REAL']."/js/deal_publish.js";
+	$this->_var['dpagejs'][] = $this->_var['TMPL_REAL']."/js/switch_city.js";
+	$this->_var['dcpagejs'][] = $this->_var['TMPL_REAL']."/js/switch_city.js";
+?>
+<script type="text/javascript" src="{function name="parse_script" v="$dpagejs" c="$dcpagejs"}"></script>
+<script type="text/javascript">
+    var ROOT = '{$APP_ROOT}/m.php';
+    var VAR_MODULE = "m";
+    var VAR_ACTION = "a";
+    var WEB_SESSION_ID = '<?php echo es_session::id(); ?>';
+    var EMOT_URL = '{$APP_ROOT}/public/emoticons/';
+    var MAX_FILE_SIZE = "<?php echo (app_conf("MAX_IMAGE_SIZE")/1000000)."MB"; ?>";
+    var UPLOAD_URL ='{$APP_ROOT}/m.php?m=File&a=do_upload&upload_type=0&dir=image' ;
+	var UPLOAD_SWF='{$TMPL}/js/plupload/Moxie.swf';
+	var UPLOAD_XAP='{$TMPL}/js/plupload//Moxie.xap';
+	var ALLOW_IMAGE_EXT= "gif,jpg,jpeg,png,bmp";
+	var MAX_IMAGE_SIZE= "<?php echo (app_conf("MAX_IMAGE_SIZE")/1000000)."MB"; ?>";
+	function get_file_fun(name){
+    		$("#"+name).ui_upload({multi:false,
+		FileUploaded:function(ajaxobj){
+ 				if(ajaxobj.error==1)
+				{
+					$.show_tip(ajaxobj.info);
+				}else{
+					$("#"+name+"_url").val(ajaxobj.public_url);
+					$("#"+name+"_image").attr('src',ajaxobj.url).attr({width:"80",height:"80"});
+					$(".fileupload .text").remove();
+ 				}
+			},Error:function(error){
+			$.show_tip(error.message);
+ 		}});
+	}
+</script>
+<div class="blank15"></div>
+<section class="project_add">
+	<form id="project_form" action="{url_wap r="project#save"}" method="post">
+		<div class="ul_block">
+			<ul>
+				<li class="webkit-box">
+					<label class="input_lable">筹款金额</label>
+					<input type="number" placeholder="请输入筹款金额" name="limit_price" value="{$deal_item.limit_price}" onkeyup="amount(this);" class="textbox webkit-box-flex" />
+					<span>元</span>
+				</li>
+				<li class="webkit-box">
+					<label class="input_lable">筹集天数</label>
+					<input type="number" placeholder="天数范围10~90" name="deal_days" value="{$deal_item.deal_days}" class="textbox webkit-box-flex" />
+					<span>天</span>
+				</li>
+			</ul>
+			<div class="blank10"></div>
+			<ul>
+				<li class="webkit-box">
+					<label class="input_lable">项目标题</label>
+					<input type="text" placeholder="请输入项目标题" name="name" value="{$deal_item.name}" class="textbox webkit-box-flex" />
+				</li>
+				<li class="textarea webkit-box">
+					<label class="input_lable mr10">项目简介</label>
+					<textarea placeholder="请输入项目简介" name="brief" id="intro" class="textareabox webkit-box-flex" style="height:70px;min-height:70px">{$deal_item.brief}</textarea>
+				</li>
+				<li class="textarea webkit-box">
+					<label class="input_lable mr10">项目详情</label>
+					<textarea placeholder="项目正文内容" name="descript" id="descript" class="textareabox webkit-box-flex">{$deal_item.description}</textarea>
+				</li>
+			</ul>
+			<div class="blank10"></div>
+			<ul>
+				<li class="webkit-box">
+					<label class="input_lable mr5">项目分类</label>
+				 	<div class="select_mod">
+						<select id="cate_id" class="f_select">
+							{foreach from=$cate_list item="cate_item" key=key}
+							<option rel="{$cate_item.id}" {if $cate_item.id eq $deal_item.cate_id}selected{/if}>{$cate_item.name}</br></option>
+							{/foreach}
+						</select>
+					</div>
+					<input type="hidden" name="cate_id" id='cate_id_last' value="{$cate_list.0.id}" />
+				</li>
+				<li class="webkit-box">
+					<label class="input_lable mr5">所在地区</label>
+					<div class="select_mod">
+						<select name="province" id="cityid-1" class="f_select">
+							<option value="" rel="0">请选择省份</option>			
+							{foreach from=$region_lv2 item=region}
+							<option value="{$region.name}" rel="{$region.id}" {if $region.selected}selected="selected"{/if}>{$region.name}</option>
+							{/foreach}
+						</select>
+					</div>
+					<div class="select_mod">
+						<select name="city" id="cityid-2" class="f_select">
+							<option value="" rel="0">请选择城市</option>
+							{foreach from=$region_lv3 item=region}
+							<option value="{$region.name}" rel="{$region.id}" {if $region.selected}selected="selected"{/if}>{$region.name}</option>
+							{/foreach}
+						</select>
+					</div>
+				</li>
+				<li class="uploadbox">
+					<label class="input_lable mr10">项目封面</label>
+					<div class="blank0"></div>
+					<label class="fileupload">
+						<div class="pic_show">
+							{if $deal_item.image eq ''}
+							<div class="text">
+								<i class="icon icon_plus"></i>
+								<span class="f12">上传图片</span>
+							</div>
+							{/if}
+							<img id="image_file_image" src="{function name="get_spec_image" v=$deal_item.image w="90" h="90" g="1"}" {if $deal_item.image}width="80" height="80"{/if} />
+							<input type="button" class="filebox" name="image_file" id="image_file" />
+							<input type="hidden" name="image" value="{$deal_item.image}" id="image_file_url" />
+							<div class="fileuploading"></div>
+						</div>
+					</label>
+					<div class="f12 f_999" style="margin-top:70px;">最佳尺寸：<span class="f_red b">760px*530px</span></div>
+				</li>
+			</ul>
+		</div>
+		<div class="submit_btn_row mod_main">
+			<div class="ui-button theme_color"  id="savenext">下一步</div>
+			<input type="hidden" value="1" name="ajax" />
+			<input type="hidden" name="id" value="{$deal_item.id}" />
+			<input type="hidden" name="savenext" value="0" />
+		</div>
+	</form>
+</section>
+<div class="blank15"></div>
+<script type="text/javascript">
+	$(function(){
+		get_file_fun("image_file");
+	});
+</script>
+{include file="inc/footer.html"} 
+
+

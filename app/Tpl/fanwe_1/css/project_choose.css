@@ -1,0 +1,28 @@
+/* project_choose 开始 */
+.project_choose {
+	background:none;
+	border:0;
+	width:1000px;
+	text-align:center;
+}
+.project_choose .project_general { margin-right:20px; }
+.project_choose .project_general ,
+.project_choose .project_agency {
+	width:448px;
+	border:1px solid #e3e3e3;
+	background:#fff;
+	float:left;
+	text-align:center;
+	padding:40px 20px;
+	border-radius:5px;
+}
+.project_choose .project_general div{
+	width:100%;
+	text-align:center;
+}
+.project_choose a.ui-button{
+	display:inline-block;
+	margin:0 auto;
+	float:none;
+}
+/* project_choose 结束 */

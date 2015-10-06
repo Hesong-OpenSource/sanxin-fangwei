@@ -1,0 +1,268 @@
+{include file="inc/header.html"} 
+<style type="text/css">
+	body{background:#f0f0f0;}
+</style>
+<div class="deals_index">
+	<div class="hide_list">
+	  	<div class="abbr">
+	  	   	<div class="first_list webkit-box-flex" id="first_list">
+	  	   	    <ul>
+					{foreach from=$cate_list item=cate_item }
+					<li class="directory">{$cate_item.name}</li>
+					{/foreach}
+	  	   	    </ul>
+	  	   	</div>
+		   	<div class="second_list webkit-box-flex" id="second_list">
+		   		{foreach from=$cate_list item=cate_item}
+		   	    <ul>
+		   	    	<li class="two_directory"><a href="{$cate_item.url}">全部</a></li>
+		   	    	{if $cate_item.child}
+					{foreach from=$cate_item.child item=clist}
+					{if $clist}
+					<li class="two_directory"><a href="{$clist.url}">{$clist.name}</a></li>
+			   		{/if}
+				    {/foreach}
+					{/if}	
+	  	   	    </ul>
+				{/foreach}
+		   	</div>
+	  	</div>
+	  	<div class="abbr">
+	  	   	<div class="first_list webkit-box-flex" id="first_list">
+	  	   	    <ul>
+					{foreach from=$city_list item=quan key=key}
+					<li class="directory">{$quan.province}</li>
+					{/foreach}
+	  	   	    </ul>
+	  	   	</div>
+		   	<div class="second_list webkit-box-flex" id="second_list">
+		   		{foreach from=$city_list item=quan }
+		   	    <ul>
+ 	  	   	    	<li class="two_directory"><a href="{$quan.url}">全部</a></li>
+ 					{foreach from=$quan.child item=qlist}
+					<li class="two_directory"><a href="{$qlist.url}">{$qlist.name}</a></li>
+					{/foreach}
+	  	   	    </ul>
+				{/foreach}
+		   </div>
+	  	</div>
+	  	<div class="abbr">
+	  	   	<div class="all_list" id="first_list">
+	  	   	    <ul>
+	  	   	    	<li class="directory"><a href="{url_wap r="deals" p="type=$p_type"}" {if $p_state eq ''} class="current"{/if}>所有项目{if $p_state eq ''}({$deal_count}){/if}</a></li>
+					{foreach from=$state_list item=state_item key=key}
+					<li class="directory"><a href="{$state_item.url}" title="{$state_item.name}" {if $p_state eq $key}class="current"{/if}>{$state_item.name}{if $p_state eq $key}({$deal_count}){/if}</a></li>
+					{/foreach}	
+	  	   	    </ul>
+	  	   	</div>  
+	  	</div>
+	</div>
+ 	<div class="main_list">
+ 	   <ul class="mall-cate webkit-box">
+ 	   	   	<li class="webkit-box-flex">{if $cate_name}{$cate_name}{else}全部分类 {/if}<i class="fa fa-sort-desc ml5"></i></li>
+		   	<li class="webkit-box-flex">{if $p_loc}{$p_loc}{else}全城 {/if}<i class="fa fa-sort-desc ml5"></i></li>
+		   	<li class="webkit-box-flex">{if $state_name}{$state_name}{else}状态{/if}<i class="fa fa-sort-desc ml5"></i></li>
+ 	   </ul>
+ 	</div>
+	{foreach from=$deal_list item=deal key=k}
+	<section class="deal_item_list">
+ 	<a href="{url_wap r="deal" p="id=$deal.id"}">
+	    <div class="deal_item_box">
+	        <!--1-->
+	        <div class="imgbox">
+	           <img src="{if $deal.image eq ''}{$TMPL}/images/empty_thumb.gif{else}{function name="get_spec_image" v=$deal.image w="640" h="445" g="1"}{/if}" alt="{$deal.name}" />
+	        </div>
+	        <div class="clear"></div>
+	        <h3 class="deal_title sizing">{$deal.name}</h3>
+	        <div class="clear"></div>
+	        <!--2-->
+	        <div class="paiduan">
+	            <span class="caption-title">
+	            	已筹资：<span class="symbol">¥</span><span class="f_money">{function name="round" v=$deal.support_amount e=2}</span>&nbsp;&nbsp;
+	            	目标：<span class="symbol" style="color:#333">¥</span><span class="f_money" style="color:#333">{function name="round" v=$deal.limit_price e=2}</span>
+	        	</span>
+	            <span class="f_r ">
+        	 	{if $deal.status eq '0'}
+                    <span class="common common-fail">即将开始</span>
+               	{else}
+					{if $deal.percent >=100}
+				 		<span class="common common-success">已成功</span>
+					{else}
+						{if $deal.status eq 1}
+	                    	<span class="common common-success">已成功</span>
+		                {/if}
+		                {if $deal.status eq 2}
+		                    <span class="common common-fail">筹资失败</span>
+		                {/if}
+		                {if $deal.status eq 3}
+		                    <span class="common common-sprite">筹资中</span>
+		                {/if}
+		                {if $deal.status eq 4}
+		                    <span class="common common-sprite">长期项目</span>
+		                {/if}
+					{/if}	
+			 	{/if}   
+	            </span>
+	        </div>
+	        <div class="clear"></div>
+	        <!--3-->
+	        <div class="deal_content_box pd">
+         		<div class="ui">
+	      			{if $deal.percent gte 100}
+                    <span class="common-success" style="width:100%;"></span>
+                    {else}
+                    <span class="progress" style="width:{$deal.percent}%;"></span>
+                    {/if}
+	         	</div>
+	            <div class="blank">
+	            </div>
+	            {if $deal.left_begin_time>0}
+	            <div class="div_dt" style="width:100%;border-right:0">
+	                <div class="f_999">离项目开始还有</div>
+					<div class="left_time" data="{$deal.left_begin_time}">
+						<em class="s day">--</em>
+						<em class="l">天</em>
+						<em class="s hour">--</em>
+						<em class="l">时</em>
+						<em class="s min">--</em>
+						<em class="l">分</em>
+						<em class="s sec">--</em>
+						<em class="l">秒</em>
+					</div>
+	            </div>
+	            <div class="div_dt_hide hide">
+	             	<div class="div_dt">
+		                <span class="num">{$deal.percent}%</span><br />
+		                <span class="til">已达</span>
+		            </div>
+		            <div class="div_dt">
+		                {if $deal.remain_days >0}
+		                <span class="num">{$deal.remain_days}天</span><br />
+		                <span class="til">剩余时间</span>
+		                {else}
+		                <span class="num">{function name="to_date" v=$deal.end_time f="Y-m-d"}</span><br />
+		                <span class="til">结束时间</span>
+		                {/if}
+		                
+		            </div>
+		            <div class="div_dt" style="border:none;">
+		                <span class="num">{$deal.support_count}</span><br />
+		                <span class="til">支持者</span>
+		            </div>
+		        </div>
+	            {else}
+	            <div class="div_dt">
+	                <span class="num">{$deal.percent}%</span><br />
+	                <span class="til">已达</span>
+	            </div>
+	            <div class="div_dt">
+	                {if $deal.remain_days >0}
+	                <span class="num">{$deal.remain_days}天</span><br />
+	                <span class="til">剩余时间</span>
+	                {else}
+	                <span class="num">{function name="to_date" v=$deal.end_time f="Y-m-d"}</span><br />
+	                <span class="til">结束时间</span>
+	                {/if}
+	                
+	            </div>
+	            <div class="div_dt" style="border:none;">
+	                <span class="num">{$deal.support_count}</span><br />
+	                <span class="til">支持者</span>
+	            </div>
+	            {/if}
+	           
+	            <div class="blank">
+	            </div>
+	        </div>
+	    </div>
+	</a>
+	</section>
+	{/foreach}  	
+	<div class="pages">{$pages}</div>
+	<div class="blank15"></div>
+</div>
+<div class="blank15"></div>
+<script type="text/javascript">
+	if($(".left_time").length){
+		leftTimeAct(".left_time");
+	}
+	// 未开始项目倒计时
+    function leftTimeAct(left_time){
+    	var leftTimeActInv = null;
+		clearTimeout(leftTimeActInv);
+		$(left_time).each(function(){
+			var leftTime = parseInt($(this).attr("data"));
+			if(leftTime > 0)
+			{
+				var day  =  parseInt(leftTime / 24 /3600);
+				var hour = parseInt((leftTime % (24 *3600)) / 3600);
+				var min = parseInt((leftTime % 3600) / 60);
+				var sec = parseInt((leftTime % 3600) % 60);
+				$(this).find(".day").html((day<10?"0"+day:day));
+				$(this).find(".hour").html((hour<10?"0"+hour:hour));
+				$(this).find(".min").html((min<10?"0"+min:min));
+				$(this).find(".sec").html((sec<10?"0"+sec:sec));
+				leftTime = leftTime-1;
+				$(this).attr("data",leftTime);
+			}
+			else{
+				$(this).parent(".div_dt").hide();
+				$(this).parent().next().show();
+				return false;
+			}
+		});
+		leftTimeActInv = setTimeout(function(){
+			leftTimeAct(left_time);
+		},1000);
+	}
+</script>
+<script type="text/javascript">
+    //筛选分类 
+	$(function(){
+		var hideList_height = $(document).height();
+		$(".hide_list").css("height",hideList_height+"px");
+		
+		$(".mall-cate>li").each(function(index){
+			var $this = $(this);
+			$this.bind({
+				click:function(e){
+					e.stopPropagation();
+					// 初始化
+					$(".abbr").removeClass("webkit-box");
+					$(".hide_list").hide()
+					$("#second_list>ul").hide();
+					if(!($this.hasClass("cur"))){
+						$this.addClass("cur").siblings().removeClass("cur");
+						$(".hide_list").show().find(".abbr").eq(index).addClass("webkit-box").find("#second_list>ul").eq(index).show();
+						$("#first_list li").each(function(index){
+							var $this = $(this);
+							$this.click(function(e){
+								e.stopPropagation();
+								$(".second_list>ul").hide();
+								$this.addClass("select").siblings().removeClass("select");
+								$(".second_list>ul").eq(index).show();
+							})
+						})
+					}
+					else{
+						$this.removeClass("cur");
+						$(".abbr").eq(index).removeClass("webkit-box");
+					}
+				} ,
+				change:function(){
+					
+				}
+			});
+		});
+		$(".abbr").bind("click",function(e){
+			e.stopPropagation();
+		});
+		$(document).click(function(){
+			$(".mall-cate>li").removeClass("cur");
+			$(".abbr").removeClass("webkit-box");
+			$(".hide_list").hide();
+			$("#second_list>ul").hide();
+		})
+	})
+</script>
+{include file="inc/footer.html"}

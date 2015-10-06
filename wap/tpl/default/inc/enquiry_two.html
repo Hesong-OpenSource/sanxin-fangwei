@@ -1,0 +1,162 @@
+<style>
+	.fileupload .filebox{ cursor:pointer; filter:alpha(opacity=0); -moz-opacity:0; -khtml-opacity:0; opacity:0; padding:0; height:40px; width:97px; }
+	.control-group input.textbox { width:97px; }
+	.mod_lf{ width:60%; margin-right:5%; }
+	.chance_left h3{
+		height:30px;
+		line-height:30px;
+		color:#fff;
+		font-weight:normal;
+	}
+	.chance_left span{
+		width:148px;
+		height:40px;
+		line-height:40px;
+		border:1px solid #e3e3e3;
+		border-top:0;
+		display:block;
+	}
+	.control-group{height:auto;margin-left:0}
+	.control-group label{
+		height:33px;
+		line-height:33px;
+	}
+	.control-group .textbox{
+		padding:6px;
+	}
+	.chance_left{
+		width:45%;
+		top:10px;
+		right:0;
+		_right:20px;
+	}
+	.dialog-mask{opacity:0}
+	label{font-size:1.4rem;}
+</style>
+<div class="full pr">
+<form id="enquiry_two" action="{url_wap r="investor#enquiry_save"}">
+	<div class="ul_block">
+		<ul>
+			<li class="webkit-box">
+				<label class="input_lable">项目估值：</label>
+				<input type="text" placeholder="请输入估值金额" name="stock_value" id="stock_value" class="textbox webkit-box-flex stock_value" value="" style="width:100px;margin-right:5px;" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-.]+/,'');}).call(this)" onblur="this.v();"/>万元
+			</li>
+			<li class="webkit-box">
+				<label class="input_lable">投资金额：</label>
+				<input type="text" placeholder="请输入投资金额" name="money" id="money" class="textbox webkit-box-flex" value="" style="width:100px;margin-right:5px;" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-.]+/,'');}).call(this)" onblur="this.v();"/>万元
+			</li>
+			<li class="webkit-box textarea_li">
+				<label class="input_lable">投资理由：</label>
+				<textarea class="textareabox webkit-box-flex f14" placeholder="请输入内容" name="investment_reason" id="investment_reason" value="" style="height:40px;margin:10px 0;"></textarea>
+			</li>
+			<li class="textarea_li">
+				<label class="input_lable tl" style="text-align:left">我能为创业者提供非资金帮助：</label>
+				<textarea class="textareabox f14" placeholder="请输入内容" name="funding_to_help" id="funding_to_help" value="" style="width:100%;height:40px"></textarea>
+			</li>
+		</ul>
+	</div>
+	<div class="blank10"></div>
+	<div>
+		<label class="f_l f_666">是否愿意担任合伙人：</label>
+		<div class="f14 f_l">
+			<!--0表示无状态 1表示愿意承担企业合伙人 2表示不愿意承担企业合伙人-->
+			<span class="info_view" type="radio" rel="genera_partners">
+		    	<input type="radio" class="mt f_l mr5" name="is_partner" value="1" checked="checked"/>
+			    <span class="f_l mr10">是</span>
+			</span>
+			<span class="info_view" type="radio" rel="genera_partners">
+			    <input type="radio" class="mt f_l mr5" name="is_partner" value="2" />
+			    <span class="f_l">否</span>
+			</span> 
+		</div>
+	</div>
+	<div class="blank20"></div>
+	<div class="submit_btn_row webkit-box">
+		<div class="ui-button ui-two-button theme_color button_y webkit-box-flex" rel="green">提交</div>
+		<div class="ui-button ui-two-button bg_gray button_n webkit-box-flex" rel="green">取消</div>
+		<input type="hidden" value="1" name="ajax" />
+		<input type="hidden" value="{$deal_id}" name="deal_id" id="deal_id"/>
+		<input type="hidden" value="{$user_id}" name="user_id" id="user_id"/>
+	</div>
+	<div class="blank5"></div>
+</form>
+</div>
+<script type="text/javascript">
+//筛选
+$(function(){
+	ui_check();
+	enquiry_save();
+});
+//询价信息入库
+function enquiry_save(){
+	$("#enquiry_two .button_y").bind("click",function(){
+		if($("#stock_value").val()==''){
+			$.showErr("项目估值不能为空！");
+			return false;
+		}
+		if((isNaN($(".stock_value").val())||parseFloat($(".stock_value").val())<=0)||$(".stock_value").val()=='')
+		{
+			$.showErr("请输入正确的估值金额");
+			return false;
+		}
+		if((isNaN($("input[name='money']").val())||parseFloat($("input[name='money']").val())<=0)||$("input[name='money']").val()=='')
+		{
+			$.showErr("请输入正确的投资金额");
+			return false;
+		}
+		if($("#investment_reason").val()==''){
+			$.showErr("投资理由不能为空！");
+			return false;
+		}
+		if($("#funding_to_help").val()==''){
+			$.showErr("资金帮助不能为空！");
+			return false;
+		}
+		var ajaxurl = $("#enquiry_two").attr("action");
+		var query = $("#enquiry_two").serialize();
+		//alert(query);
+		$.ajax({
+			url: ajaxurl,
+			dataType: "json",
+			data:query,
+			type: "POST",
+			success:function(ajaxobj){
+				if(ajaxobj.status==0){
+					$.showErr(ajaxobj.info);
+					return false;
+				}
+				if(ajaxobj.status==1){
+					$.showSuccess(ajaxobj.info,function(){
+						location.reload();
+					});
+				}
+				 
+			}
+		});
+	});
+}
+function ui_check(){
+	$(".button_n").click(function(){
+		$.weeboxs.close();
+	});
+	$(".ui_check").click(function(){
+		if($(this).find("input").attr("type")=="radio"){
+			var rel=$(this).attr("rel");
+			$(".ui_check[rel='"+rel+"']").removeClass("ui_checked");
+			$(".ui_check[rel='"+rel+"'] input").attr("checked",false);
+			$(this).addClass("ui_checked");
+			$(this).find("input").attr("checked","checked");
+		}
+		else{
+			if($(this).hasClass("ui_checked")){
+				$(this).removeClass("ui_checked");
+				$(this).find("input").attr("checked",false);
+			}
+			else{
+				$(this).addClass("ui_checked");
+				$(this).find("input").attr("checked","checked");
+			}
+		}
+	});
+}
+</script>

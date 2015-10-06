@@ -1,0 +1,59 @@
+<div class="userhomehd">
+	<div class="user_info_t">
+		<div class="user_info_l">
+			<div class="userbox1img f_l">{function name="show_avatar" p="$home_user_info.id" t="big"}</div>
+			<div class="homebox1main f_l">
+				<div class="user_text user_text_1">
+					<span class="inline_user_name user_name">{$home_user_info.user_name}</span>
+					{if $home_user_info.user_icon}
+			        <img src="{$home_user_info.user_icon}" alt="会员等级" class="inline_level_icon level_icon" />
+					{/if}
+					<i class="inline_investor_type investor_type {if $home_user_info.is_investor==0 || $home_user_info.is_investor==1}personal_icon{else}agency_icon{/if}" title="{if $home_user_info.is_investor==0 || $home_user_info.is_investor==1}个人投资者{else}机构投资者{/if}"></i>
+					{if $home_user_info.investor_status eq 1}<span>信息已认证成功</span>{/if}
+				</div>
+				<div class="user_text f12">
+					{if $home_user_info.company}<span class="mr5">{$home_user_info.company}</span>{/if}
+					{if $home_user_info.job}<span>{$home_user_info.job}</span>{/if}
+				</div>
+				<div class="user_text f12 mb5">
+					<span>{function name="to_date" v=$home_user_info.create_time f="Y年m月d日"} 加入 {function name="app_conf" v="SITE_NAME"}</span>
+				</div>
+				<div class="user_text f12">
+					{if $home_user_info.province}<span>{$home_user_info.province}&nbsp;{$home_user_info.city}</span>{/if}
+				</div>
+			</div>
+		</div>
+		<div class="user_info_r">
+			<div class="user_info_r_m">
+				<a href="javascript:void(0)" onclick="ajax_get_recommend_project(this,'{$user_info.id}','{url r="ajax#ajax_get_recommend_project"}');" rel="{$home_user_info.id}" name="recommend_project" class="ui-button ui-center-button bg_red">自荐我的项目</a>
+				<div class="blank15"></div>
+				<a href="javascript:void(0);" onclick="send_message({$home_user_info.id});">+和他先聊聊</a>	
+			</div>
+		</div>
+		<div class="blank0"></div>
+	</div>
+	<div class="user_info_b">
+		<div class="user_info_b_m">
+			<div class="mb10">
+				<span>关注的领域：</span>
+				{if $home_user_info.cate_name}
+					{foreach from=$home_user_info.cate_name item=cate_item}
+					<span>{$cate_item}</span>
+					{/foreach}
+				{else}
+					<span>暂无</span>
+				{/if}
+				<div class="blank0"></div>
+				<span>博客或微博：</span>
+				{if $home_user_info.weibo_list}
+					{foreach from=$home_user_info.weibo_list item=weibo_item}
+						<span><a href="{$weibo_item.weibo_url}" target="_blank" class="linkgreen">{$weibo_item.weibo_url}</a> 、</span>
+					{/foreach}
+				{else}
+					<span>暂无</span>
+				{/if}
+			</div>
+			<span>{$home_user_info.intro}</span>
+		</div>
+	</div>
+</div>

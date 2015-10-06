@@ -1,0 +1,217 @@
+{include file="inc/header.html"} 
+<script type="text/javascript" src="{$TMPL}/js/TouchSlide.1.1.js"></script>
+<!--banner 开始 -->
+<style type="text/css">
+body{background: #f0f0f0}
+</style>
+<section class="index">
+    <div class="oComment_height">
+        <nav class="index_nav">
+            <ul class="webkit-box">
+            	{if $invest_status eq 0}
+	                <li class="curr webkit-box-flex"><a href="{url_wap r="deals#index"}">产品众筹</a></li>
+					<li class="webkit-box-flex"><a href="{url_wap r="deals#index" p="type=1"}" class="equity">股权众筹</a></li>
+				{elseif $invest_status eq 1}
+					<li class="curr webkit-box-flex"><a href="{url_wap r="deals#index"}">产品众筹</a></li>
+				{else}
+					<li class="webkit-box-flex"><a href="{url_wap r="deals#index" p="type=1"}" class="equity">股权众筹</a></li>
+				{/if}
+                <li class="webkit-box-flex"><a href="{url_wap r="article_cate"}">新闻资讯</a></li>
+                <li class="nav_last webkit-box-flex"><a href="{url_wap r="category"}">全部分类</a></li>  
+            </ul>
+            <i id="nav_line"></i>
+        </nav>
+        <div class="oComment_1" style="padding-top:49px;">
+             <!--banner 开始 -->
+            {if $adv_list}
+            <div id="slideBox" class="banner">
+                <div class="bd">
+                    <ul>
+                        {foreach from=$adv_list item=adv key=k}
+                        <li>
+                            <a href="{$adv.url}"><img src="{$adv.img}"></a>
+                        </li>
+                        {/foreach}
+                    </ul>
+                </div>
+                <div class="hd">
+                    <ul></ul>
+                </div>
+            </div>
+            <script type="text/javascript">
+                if($("#slideBox .bd ul").find('li').length>1){
+                    TouchSlide({ 
+                        slideCell:"#slideBox",
+                        titCell:".hd ul", //开启自动分页 autoPage:true ，此时设置 titCell 为导航元素包裹层
+                        mainCell:".bd ul", 
+                        effect:"leftLoop", 
+                        autoPage:true,//自动分页
+                        autoPlay:true //自动播放
+                    });
+                }
+                if($("#slideBox > .hd").find("li").length <=1){
+                    $("#slideBox > .hd").hide();
+                }
+            </script>
+            {/if}
+            <!--banner 结束 -->
+            <!-- 首页分类 开始 -->
+            <div class="index_category sizing" id="category_slidebox">
+                <div class="bd">
+                    <ul>
+                    {foreach from=$cate_list item=cate name=cate_list key=k}
+                    {if $cate.pid eq 0}
+                        {if $smarty.foreach.cate_list.iteration mod 8 eq 1}
+                        <li class="itemss">
+                        {/if}
+                            <div class="items">
+                                <div class="item {if $k%6 eq 0}bg1{/if}{if $k%6 eq 1}bg2{/if}{if $k%6 eq 2}bg3{/if}{if $k%6 eq 3}bg4{/if}{if $k%6 eq 4}bg5{/if}{if $k%6 eq 5}bg6{/if}">
+                                    <a href="{if app_conf('INVEST_STATUS') eq 0 || app_conf('INVEST_STATUS') eq 1}{url_wap r="deals#index" p="id=$cate.id"}{/if}{if app_conf('INVEST_STATUS') eq 2}{url_wap r="deals#index" p="id=$cate.id&type=1"}{/if}" class="">
+                                        <span>{$cate.name}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        {if $smarty.foreach.cate_list.iteration % 8 eq 0}
+                        </li>
+                        {/if}
+                    {/if}
+                    {/foreach}
+                    </ul>
+                </div>
+                <div class="hd">
+                    <ul></ul>
+                </div>
+            </div>
+            <script type="text/javascript">
+                if($("#category_slidebox .bd ul").find('li').length>1){
+                    TouchSlide({ 
+                        slideCell:"#category_slidebox",
+                        titCell:"#category_slidebox .hd ul", //开启自动分页 autoPage:true ，此时设置 titCell 为导航元素包裹层
+                        mainCell:"#category_slidebox .bd ul", 
+                        effect:"leftLoop", 
+                        autoPage:true,//自动分页
+                        autoPlay:false //自动播放
+                    });
+                }
+                if($("#category_slidebox .hd").find("li").length <=1){
+                    $("#category_slidebox .hd").hide();
+                }
+            </script>
+            <!-- 首页分类 结束 -->
+            <!--list 开始 -->
+            <div class="blank10"></div>
+            <h2 class="h2-title bdl sizing">
+                最新创意
+                <span class="f_r">
+                    {if $invest_status eq 0 || $invest_status eq 1}
+                        <a href="{url_wap r="deals#index"}">更多产品项目&nbsp;<i class="fa fa-angle-right"></i></a>
+                    {/if}
+                    {if $invest_status eq 2}
+                        <a href="{url_wap r="deals#index" p="type=1"}">更多股权项目&nbsp;<i class="fa fa-angle-right"></i></a> 
+                    {/if}
+                </span>
+            </h2>
+            <div class="tabul-box">
+                <a name="classify"></a>
+                <div class="tabul-div">
+                    <ul class="tab-ul">
+                        <li>
+                            <a class="current">综合推荐</a>
+                        </li>
+                        <li>
+                            <a href="{if app_conf('INVEST_STATUS') eq 0 || app_conf('INVEST_STATUS') eq 1}{url_wap r="deals" p="r=rec"}{/if}{if app_conf('INVEST_STATUS') eq 2}{url_wap r="deals" p="r=rec&type=1"}{/if}">推荐项目</a>
+                        </li>
+                        <li>
+                            <a href="{if app_conf('INVEST_STATUS') eq 0 || app_conf('INVEST_STATUS') eq 1}{url_wap r="deals" p="r=yure"}{/if}{if app_conf('INVEST_STATUS') eq 2}{url_wap r="deals" p="r=yure&type=1"}{/if}">正在预热</a>
+                        </li>
+                        <li>
+                            <a href="{if app_conf('INVEST_STATUS') eq 0 || app_conf('INVEST_STATUS') eq 1}{url_wap r="deals" p="r=new"}{/if}{if app_conf('INVEST_STATUS') eq 2}{url_wap r="deals" p="r=new&type=1"}{/if}">最新上线</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {if app_conf('INVEST_STATUS') eq 0 || app_conf('INVEST_STATUS') eq 1 }
+        {include file="inc/deal_list_index_new_pro.html"} 
+        <div class="readall">
+            <a href="{url_wap r="deals#index"}"><span class="f_l ck">更多产品众筹</span><span class="f_r jh"><i class="fa fa-angle-right"></i></span></a>
+        </div>
+    {else}
+        {include file="inc/deal_list_index_new_invest.html"}
+        <div class="readall">
+            <a href="{url_wap r="deals#index" p="type=1"}"><span class="f_l ck">更多股权众筹</span><span class="f_r jh"><i class="fa fa-angle-right"></i></span></a>
+        </div>
+    {/if}
+    {if app_conf('INVEST_STATUS') neq 1}
+    <div class="blank5"></div>
+     <h2 class="h2-title bdl sizing">
+        热门投资
+        <span class="f_r">
+            {if $invest_status eq 0 || $invest_status eq 2}
+                <a href="{url_wap r="deals#index" p="type=1"}">更多股权项目&nbsp;<i class="fa fa-angle-right"></i></a>
+            {/if}
+        </span>
+    </h2>
+    <div class="tabul-box">
+        <a name="classify"></a>
+        <div class="tabul-div">
+            <ul class="tab-ul">
+                <li>
+                    <a class="current">综合推荐</a>
+                </li>
+                <li>
+                    <a href="{url_wap r="deals" p="r=rec&type=1"}">推荐项目</a>
+                </li>
+                <li>
+                    <a href="{url_wap r="deals" p="r=yure&type=1"}">正在预热</a>
+                </li>
+                <li>
+                    <a href="{url_wap r="deals" p="r=new&type=1"}">最新上线</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    {include file="inc/deal_list_index_hot_invest.html"}
+    <div class="readall">
+        <a href="{url_wap r="deals#index" p="type=1"}"><span class="f_l ck">更多股权众筹</span><span class="f_r jh"><i class="fa fa-angle-right"></i></span></a>
+    </div>
+    {/if}
+    <!--list 结束 -->
+    <div class="blank10"></div>
+</section>
+<script type="text/javascript">
+    if($(".left_time").length){
+        leftTimeAct(".left_time");
+    }
+    // 未开始项目倒计时
+    function leftTimeAct(left_time){
+        var leftTimeActInv = null;
+        clearTimeout(leftTimeActInv);
+        $(left_time).each(function(){
+            var leftTime = parseInt($(this).attr("data"));
+            if(leftTime > 0)
+            {
+                var day  =  parseInt(leftTime / 24 /3600);
+                var hour = parseInt((leftTime % (24 *3600)) / 3600);
+                var min = parseInt((leftTime % 3600) / 60);
+                var sec = parseInt((leftTime % 3600) % 60);
+                $(this).find(".day").html((day<10?"0"+day:day));
+                $(this).find(".hour").html((hour<10?"0"+hour:hour));
+                $(this).find(".min").html((min<10?"0"+min:min));
+                $(this).find(".sec").html((sec<10?"0"+sec:sec));
+                leftTime = leftTime-1;
+                $(this).attr("data",leftTime);
+            }
+            else{
+                $(this).parent(".div_dt").hide();
+                $(this).parent().next().show();
+                return false;
+            }
+        });
+        leftTimeActInv = setTimeout(function(){
+            leftTimeAct(left_time);
+        },1000);
+    }
+</script>
+{include file="inc/footer.html"}

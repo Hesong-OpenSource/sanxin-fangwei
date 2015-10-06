@@ -1,0 +1,14 @@
+<div class="list_title clearfix">
+	<div {if $f eq 0}class="cur"{/if}>
+		<a href="{url r="account#focus" p="s=$s&f=0"}">全部</a>
+	</div>
+	<div {if $f eq 1}class="cur"{/if}>
+		<a href="{url r="account#focus" p="s=$s&f=1"}">进行中</a>
+	</div>
+	<div {if $f eq 2}class="cur"{/if}>
+		<a href="{url r="account#focus" p="s=$s&f=2"}">成功的</a>
+	</div>
+	<div {if $f eq 3}class="cur"{/if}>
+		<a href="{url r="account#focus" p="s=$s&f=3"}">失败的</a>
+	</div>
+</div>

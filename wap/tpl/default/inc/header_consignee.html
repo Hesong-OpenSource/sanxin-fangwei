@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="Generator" />
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=0,minimum-scale=0.5">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="format-detection" content="telephone=no">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{if $page_title neq ''}{$page_title} - {/if}{$site_name} - {$seo_title}</title>
+        <meta name="keywords" content="{$seo_keyword}" />
+        <meta name="description" content="{$seo_description}" />
+        <?php
+		 $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/layout.css";
+         $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/style.css";
+ 		 $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/weebox.css";
+ 		 $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.js";
+		 $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.bgiframe.js";
+		 $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.weebox.js";
+		 $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.bgiframe.js";
+		 $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.weebox.js";
+		 $this->_var['cpagejs'][]='';
+  		?>
+        <link rel="stylesheet" type="text/css" href="{$font_url}" />
+        <link rel="stylesheet" type="text/css" href="{function name="parse_css" v="$pagecss"}" />
+        <script type="text/javascript">
+            var APP_ROOT = '{$APP_ROOT}';
+			var __HASH_KEY__ = "{$hash_key}";
+        </script>
+        <script type="text/javascript" src="{function name="parse_script" v="$pagejs" c="$cpagejs"}">
+        </script>
+        <!--百度轻应用-->
+        <meta name="baidu-tc-cerfication" content="688cdfaa49f7c8f87fd5883492587d8e">
+    </head>
+ <body style="background: #f4f4f4;">
+<div class="navbar theme_color1">
+    <div class="nav-wrap-left">
+        <a onclick="window.history.go(-1);" class="back">
+        <i class="fa fa-chevron-left"></i>
+        </a>
+    </div>
+    <span>{if $consignee_info.id}修改{else}添加{/if}新地址</span>
+</div>
+{include file="inc/header_search.html"}
+<div class="wraper">

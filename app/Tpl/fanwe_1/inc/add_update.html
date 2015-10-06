@@ -1,0 +1,50 @@
+<?php
+$this->_var['dpagejs'][] = $this->_var['TMPL_REAL']."/js/upload_log_image.js";
+$this->_var['dcpagejs'][] = $this->_var['TMPL_REAL']."/js/upload_log_image.js";
+$this->_var['dpagejs'][] = $this->_var['TMPL_REAL']."/js/ajaxupload.js";
+?>
+<script type="text/javascript" src="{function name="parse_script" v="$dpagejs" c="$dcpagejs"}"></script>
+<style type="text/css">
+	.full{_height:300px;}
+	.fileupload .filebox{ cursor:pointer; filter:alpha(opacity=0); -moz-opacity:0; -khtml-opacity:0; opacity:0; padding:0; height:39px; width:97px; }
+	.control-group{margin-left:0;_margin-bottom:12px;}
+	.control-group .textbox , .control-group .textareabox{width:307px;}
+	.control-group1 label{height:39px;line-height:39px}
+</style>
+<div class="full">
+	<form id="add_update_form" action="{url r="deal#save_update"}">		
+		<div class="control-group">
+			<label class="f_l mr15">动态内容:</label>
+			<textarea name="log_info" class="textareabox f_l"></textarea>
+		</div>
+		<div class="blank0"></div>
+		<div class="form_row control-group control-group1">
+			<label class="f_l mr15">相关图片:</label>
+			<div class="f_l tl">
+				<label class="fileupload f_l" onclick="upd_file(this,'image_file');" style="height:39px; margin-top:0;cursor:pointer">
+					<input type="file" class="filebox" name="image_file" id="image_file"/>
+				</label>
+				<label class="fileuploading hide"></label>						
+			</div>
+			<div class="log_image_upd">
+				<img width="50" height="50" src="" />
+				<input type="hidden" name="image" value="" />
+			</div>
+		</div>
+		<div class="blank0"></div>
+		<div class="form_row control-group">
+			<label class="f_l mr15">视频地址:</label>
+			<input type="text" name="vedio" class="textbox" value="" style="margin-right:0" />
+		</div>
+		<div class="blank10"></div>
+		<div class="submit_btn_row" style="margin-left:74px;">
+			<div class="ui-button theme_bgcolor" rel="green">
+				<div>
+					<span>保存</span>
+				</div>
+			</div>
+			<input type="hidden" value="1" name="ajax" />
+			<input type="hidden" value="{$deal_info.id}" name="id" />
+		</div>
+	</form>
+</div>

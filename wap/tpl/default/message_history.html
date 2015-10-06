@@ -1,0 +1,155 @@
+{include file="inc/header_account.html"}
+<?php
+$this->_var['dpagejs'][] = $this->_var['TMPL_REAL']."/js/message.js";
+$this->_var['dcpagejs'][] = $this->_var['TMPL_REAL']."/js/message.js";
+$this->_var['dpagecss'][] = $this->_var['TMPL_REAL']."/css/message.css";
+?>
+<link rel="stylesheet" type="text/css" href="{function name="parse_css" v="$dpagecss"}" />
+<script type="text/javascript" src="{function name="parse_script" v="$dpagejs" c="$dcpagejs"}"></script>
+<section class="mod_main message_history">
+	<h2>
+		与 <a class="linkgreen">{$dest_user_info.user_name}</a> 的私信记录
+	</h2>
+	<div class="blank10"></div>
+	{if $message_list}
+	<div class="ul_block">
+		<ul>
+			{foreach from=$message_list item=message_item}
+			<li>
+				<div class="webkit-box">
+						<div class="contact_avatar mr5">{function name="show_wap_avatar" p="$message_item.dest_user_id" t="small"}</div>
+					<div class="contact_info webkit-box-flex">
+						<div>
+							{if $message_item.message_type eq 'inbox'}
+							<a class="linkgreen">{$message_item.dest_user_name}</a> : {function name="nl2br" v=$message_item.message}
+							{/if}
+							{if $message_item.message_type eq 'outbox'}
+							发送给 <a class="linkgreen">{$message_item.dest_user_name}</a> : {function name="nl2br" v=$message_item.message}
+							{/if}
+							<div class="clear"></div>
+							<time class="f_999">{function name="pass_date" v=$message_item.create_time}</time>
+						</div>
+					</div>	
+				</div>
+				<div class="message_op tr mt5 mb5"> <a href="javascript:void(0);" onclick="send_message('{url_wap r="ajax#usermessage" p="id=$message_item.dest_user_id"}');" class="theme_fcolor">回复</a> | <a href="{url_wap r="message#delmessage" p="id=$message_item.id"}" class="linkgreen delmessage">删除</a></div>
+			</li>
+			{/foreach}
+		</ul>
+	</div>
+	<div class="blank15"></div>
+	<div class="pages">{$pages}</div>
+	<div class="blank15"></div>
+	{else}
+	<div class="empty_tip">没有任何私信记录</div>
+	{/if}
+</section>
+<script type="text/javascript">
+	function send_message(usermessage_url)
+{
+	var ajaxurl = usermessage_url;
+	$.ajax({ 
+		url: ajaxurl,
+		dataType: "json",
+		type: "POST",
+		success: function(ajaxobj){
+			if(ajaxobj.status==1)
+			{
+				$.weeboxs.open(ajaxobj.html, {boxid:'send_message',contentType:'text',showButton:false, showCancel:false, showOk:false,title:'发送私信',width:300,height:200,type:'wee'});				
+				$("#user_message_form").find("textarea[name='message']").focus();
+				bind_usermessage_form();
+				
+			}
+			else if(ajaxobj.status==2)
+			{
+				show_pop_login();
+			}
+			else
+			{
+				$.showErr(ajaxobj.info);							
+			}
+		},
+		error:function(ajaxobj)
+		{
+//			if(ajaxobj.responseText!='')
+//			alert(ajaxobj.responseText);
+		}
+	});
+}
+//显示登入框
+function show_pop_login()
+{
+	window.location.href='{url_wap r="user#login"}';
+}
+
+//发送消息（消息）
+function bind_usermessage_form()
+{
+		$("#user_message_form").find(".ui-button").bind("click",function(){
+			$("#user_message_form").submit();
+		});
+		$("#user_message_form").bind("submit",function(){
+			if($.trim($("#user_message_form").find("textarea[name='message']").val())=="")
+			{
+				$("#user_message_form").find("textarea[name='message']").focus();
+				return false;
+			}
+			var ajaxurl = $(this).attr("action");
+			var query = $(this).serialize() ;
+			$.ajax({ 
+				url: ajaxurl,
+				dataType: "json",
+				data:query,
+				type: "POST",
+				success: function(ajaxobj){
+					close_pop();
+					if(ajaxobj.status==1)
+					{
+						if(ajaxobj.info!="")
+						{
+							$.showSuccess(ajaxobj.info,function(){
+								if(ajaxobj.jump!="")
+								{
+									location.href = ajaxobj.jump;
+								}
+							});	
+						}
+						else
+						{
+							if(ajaxobj.jump!="")
+							{
+								location.href = ajaxobj.jump;
+							}
+						}
+					}
+					else
+					{
+						if(ajaxobj.info!="")
+						{
+							$.showErr(ajaxobj.info,function(){
+								if(ajaxobj.jump!="")
+								{
+									location.href = ajaxobj.jump;
+								}
+							});	
+						}
+						else
+						{
+							if(ajaxobj.jump!="")
+							{
+								location.href = ajaxobj.jump;
+							}
+						}							
+					}
+				},
+				error:function(ajaxobj)
+				{
+					if(ajaxobj.responseText!='')
+					alert(ajaxobj.responseText);
+				}
+			});
+			return false;
+		});
+	
+}
+</script>
+{include file="inc/footer.html"}

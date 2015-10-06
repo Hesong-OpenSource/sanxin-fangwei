@@ -1,0 +1,191 @@
+{include file="inc/header.html"}
+<script type="text/javascript" src="{$TMPL}/js/investor_index.js"></script>
+<style type="text/css">
+	.uc_table .p_inf{text-align:left;padding-left:0}
+	.my_project ul{border:0;}
+	.my_project .tab-nav li{
+		background:#f1f1f1;
+		border:1px solid #ddd;
+		margin:0 -1px;
+	}
+	.my_project .tab-nav li.current{
+		background:#fff;
+	}
+	.my_project .tab-nav li.current a
+	.my_project .tab-nav li.current a{color:#4dbdf5;}
+	.my_project .ul_block{
+		padding:20px 10px;
+	}
+	.my_project .ul_block ul{border: 1px solid #ddd;}
+	.my_project .ul_block ul li{padding:5px;}
+	.input_lable{width:70px;}
+	.investor_index .code_btn{
+		width:180px;
+		font-size:1.2rem;
+	}
+	.weedialog .dialog-content {
+		background: #fff !important;
+		clear: both;
+		font-size: 14px;
+		padding: 20px;
+		overflow-y: auto;
+		overflow-x: hidden;
+		text-align: left; 
+	}
+</style>
+<seation class="account_index my_project investor_index">
+	<form id="investor_index_form" name="investor_index_form" action="" autocomplete="off">
+		<ul class="tab-nav webkit-box" id="investor_id">
+			<li class="webkit-box-flex tc current">
+				个人投资者
+				<input type="hidden" name="is_investor" value="1" />
+			</li>
+			<li class="webkit-box-flex tc">
+				机构投资者
+				<input type="hidden" name="is_investor" value="2" />
+			</li>
+		</ul>
+		<div class="ul_block sizing">
+			<ul>
+				<li class="webkit-box">
+					<label class="input_lable">手机号码：</label>
+					<input type="text" placeholder="输入旧密码" value="{$user_info.mobile}" id="settings-mobile" name="mobile" class="textbox webkit-box-flex" {if $mobile_is_bind neq null}disabled="disabled"{/if} />
+				</li>
+				{if $mobile_is_bind eq null}
+				<li class="webkit-box">
+					<label class="input_lable">验证码：</label>
+					<input type="text" placeholder="输入验证码" value="" name="verify_coder" id="verify_coder" class="textbox" />
+					<input type="button" value="获取验证码" class="code_btn tc webkit-box-flex" id="J_send_sms_verify">
+				</li>
+				{/if}
+			</ul>
+			<div class="blank10"></div>
+			<div class="agreement control-group pr f14">
+				<label class="form_lable"></label>
+				<span class="ui_check ui_checked" >
+					<input type="checkbox" id="J_agreement" class="mt mr10" checked="checked" style="display:inline-block;margin-top:-3px" />
+				</span>
+				我已经阅读并同意<a class="theme_fcolor" href="javascript:void(0)" onclick="javascript:help_item();">《{function name="app_conf" v="SITE_NAME"}服务条款》</a>
+			</div>
+			<div class="blank20"></div>
+			<div class="button_row">
+				<input type="button" value="同意，下一步" name="submit_form" class="ui-button theme_color" id="ui-button" {if $mobile_is_bind eq null}onclick="javascript:investor_save_mobile();"{/if}{if $mobile_is_bind neq null}onclick="javascript:investor_save_mobile2();"{/if} rel="ui-button" />
+				<input type="hidden" value="1" name="ajax" />
+				<input type="hidden" value="{url_wap r="investor#investor_two"}" name="investor_two_url" />
+				<div class="blank20"></div>
+			</div>
+		</div>
+	</form>
+</seation>
+<div style="display:none;" id="show_html">{$help_item.content}</div>
+
+<script type="text/javascript">
+$(function(){
+	$(".tab-nav li").live('click',function(){
+		$(".tab-nav li").removeClass("current");
+		$(this).addClass("current").siblings().removeClass("current");
+	});
+});
+//投资者手机验证
+function investor_save_mobile(){
+	if(!$.checkMobilePhone($("#settings-mobile").val()))
+	{
+		$.showErr("手机号码格式错误!");	
+		return false;
+	}
+	
+	if(!$.maxLength($("#settings-mobile").val(),11,true))
+	{
+		$.showErr("长度不能超过11位!");	
+		return false;
+	}
+		if($.trim($("#settings-mobile").val()).length == 0)
+	{				
+		$.showErr("手机号码不能为空!");
+		return false;
+	}
+	if($.trim($("#verify_coder").val()).length == 0){
+		$.showErr("验证码不能为空！");
+		return false;
+	}
+	var investor_two_url=$.trim($("input[name='investor_two_url']").val());
+	var is_investor=$.trim($("#investor_id .current").find("input[name='is_investor']").val());
+	var mobile = $.trim($("#settings-mobile").val());
+	var verify_coder=$.trim($("#verify_coder").val());
+	var ajaxurl ='{url_wap r="user#investor_save_mobile"}';
+	var query=new Object();
+	query.is_investor=is_investor;
+	query.mobile=mobile;
+	query.verify_coder=verify_coder;
+	$.ajax({
+		url: ajaxurl,
+		dataType: "json",
+		data:query,
+		type: "POST",
+		success:function(ajaxobj){
+				if(ajaxobj.status==1)
+				{
+					window.location.href=investor_two_url;
+				}
+				if(ajaxobj.status==0)
+				{
+					$.showErr(ajaxobj.info);
+				}
+		}
+	});
+
+}
+
+//投资者手机验证
+function investor_save_mobile2(){
+	if(!$.checkMobilePhone($("#settings-mobile").val()))
+	{
+		$.showErr("手机号码格式错误!");	
+		return false;
+	}
+	
+	if(!$.maxLength($("#settings-mobile").val(),11,true))
+	{
+		$.showErr("长度不能超过11位!");	
+		return false;
+	}
+		if($.trim($("#settings-mobile").val()).length == 0)
+	{				
+		$.showErr("手机号码不能为空!");
+		return false;
+	}
+	var investor_two_url=$.trim($("input[name='investor_two_url']").val());
+	var is_investor=$.trim($("#investor_id .current").find("input[name='is_investor']").val());
+	var mobile = $.trim($("#settings-mobile").val());
+	var ajaxurl ='{url_wap r="user#investor_save_mobile"}';
+	var query=new Object();
+	query.is_investor=is_investor;
+	query.mobile=mobile;
+	$.ajax({
+		url: ajaxurl,
+		dataType: "json",
+		data:query,
+		type: "POST",
+		success:function(ajaxobj){
+				if(ajaxobj.status==1)
+				{
+					window.location.href=investor_two_url;
+				}
+				if(ajaxobj.status==0)
+				{
+					$.showErr(ajaxobj.info);
+				}
+		}
+	});
+
+}
+
+function help_item()
+{
+	var html_var=$("#show_html").html();
+	if(html_var){
+		$.weeboxs.open(html_var, {contentType:'text',showButton:true,title:'{$help_item.title}',width:300,height:240,type:'wee'});
+	}	
+}	
+</script>
+{include file="inc/footer.html"} 

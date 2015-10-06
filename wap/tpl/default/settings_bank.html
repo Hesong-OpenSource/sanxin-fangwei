@@ -1,0 +1,110 @@
+{include file="inc/header_account.html"}
+<?php
+$this->_var['pagejs_1'][] = $this->_var['TMPL_REAL']."/js/jquery.bank.js";
+$this->_var['cpagejs_1'][]='';
+?>
+<script type="text/javascript" src="{function name="parse_script" v="$pagejs_1" c="$cpagejs_1"}"></script>
+<section class="settings_bank mod_main">
+	<form>
+	<div class="ul_block">
+		<ul>
+			<li class="webkit-box">
+				<label class="input_lable">真实姓名：</label>
+				<input {if $user_info.is_bank gt 0}readonly="readonly"{/if} value="{$user_info.ex_real_name}" name="ex_real_name" id="ex_real_name" class="textbox webkit-box-flex" type="text" placeholder="开户行的真实姓名">
+			</li>
+			<li class="webkit-box">
+				<label class="input_lable">开户银行：</label>
+				<input {if $user_info.is_bank gt 0}readonly="readonly"{/if} value="{$user_info.ex_account_bank}" name="ex_account_bank" id="ex_account_bank" class="textbox webkit-box-flex" type="text" placeholder="请填写您的开户行">
+			</li>
+			<li class="webkit-box">
+				<label class="input_lable">银行账号：</label>
+				<input {if $user_info.is_bank gt 0}readonly="readonly"{/if} value="{$user_info.ex_account_info}"  name="ex_account_info" id="Jbank_bankcard"  class="textbox webkit-box-flex" type="text" placeholder="请填写真实的银行账号">
+			</li>
+			<li class="webkit-box">
+				<label class="input_lable">联系电话：</label>
+				<input {if $user_info.is_bank gt 0}readonly="readonly"{/if} value="{$user_info.ex_contact}" name="ex_contact" id="ex_contact"  class="textbox webkit-box-flex" type="text" placeholder="请填写有效的联系方式">
+			</li>
+			<li class="webkit-box">
+				<label class="input_lable">联系QQ：</label>
+				<input  {if $user_info.is_bank gt 0}readonly="readonly"{/if} value="{$user_info.ex_qq}"  name="ex_qq" id="ex_qq" class="textbox webkit-box-flex" type="text" placeholder="请填写真实的QQ号码">
+			</li>
+		</ul>
+	</div>
+	{if $user_info.is_bank eq 0}	
+	<div class="blank15"></div>
+	<input type="button" value="保存" onclick="javascript:check_and_postData();" class="ui-button theme_color" rel="ui-button">
+	<input type="hidden" value="1" name="ajax" />
+	<div class="blank15"></div>
+	{/if}
+	</form>
+</section>
+<script>
+	$(function(){
+		$("#Jbank_bankcard").bankInput();
+	});
+	function check_and_postData(){
+		if(confirm("一旦保存将不可以修改,您确定吗？")){
+			if($("#ex_real_name").val()==""){
+				$.showErr("请填写姓名");
+				return false;
+			}
+			if($("#ex_account_bank").val()==""){
+				$.showErr("请填写开户银行");
+				return false;
+			}
+			if($("#Jbank_bankcard").val()==""){
+				$.showErr("请填写银行帐号");
+				return false;
+			}
+			if($("#ex_contact").val()==""){
+				$.showErr("请填写联系电话");
+				return false;
+			}
+			if($("#ex_qq").val()==""){
+				$.showErr("请填写联系qq");
+				return false;
+			}
+			
+			var ex_real_name=$("#ex_real_name").val();
+			var ex_account_bank=$("#ex_account_bank").val();
+			var ex_account_info=$("#Jbank_bankcard").val();
+			var ex_contact=$("#ex_contact").val();
+			var ex_qq=$("#ex_qq").val();
+			var post_url='{url_wap r="settings#save_bank"}';
+			
+			var query=new Object();
+			query.ex_real_name=ex_real_name;
+			query.ex_account_bank=ex_account_bank;
+			query.ex_account_info=ex_account_info;
+			query.ex_contact=ex_contact;
+			query.ex_qq=ex_qq;
+			
+			$.ajax({
+				url:post_url,
+				dataType:"json",
+				data:query,
+				type:"post",
+					success:function(data){
+						if(data.info!=null){
+							$.showErr(data.info);
+						}else{
+							if(data.status==1){
+								$.showSuccess("保存成功!");
+								window.location.reload();
+							}
+							if(data.status==0){
+								$.showErr("保存失败!");
+							}
+						}
+				},error:function(){
+					$.showErr("系统繁忙，稍后请重试!");
+				}
+			});
+			return false;
+		}else{
+			return false;
+		}
+	
+	}
+</script>
+{include file="inc/footer.html"}

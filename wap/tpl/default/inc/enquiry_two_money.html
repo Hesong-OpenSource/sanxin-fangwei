@@ -1,0 +1,80 @@
+<style>
+	.fileupload .filebox{ cursor:pointer; filter:alpha(opacity=0); -moz-opacity:0; -khtml-opacity:0; opacity:0; padding:0; height:40px; width:97px; }
+	.control-group{margin-left:0}
+	.control-group input.textbox { width:97px; }
+</style>
+<div class="full">
+<form id="add_enquiry_two_money" action="{url_wap r="investor#enquiry_money_save"}">
+	<div class="ul_block">
+		<ul>
+			<li class="webkit-box">
+				<label class="input_lable">追加投资金额:</label>
+				<input type="text" placeholder="请输入金额"  name="money" id="money" class="textbox webkit-box-flex" value="" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-.]+/,'');}).call(this)" onblur="this.v();"/>万元
+			</li>
+		</ul>
+	</div>
+	<div class="blank10"></div>
+	<div>
+		<label class="f_l f_666">是否愿意担任合伙人：</label>
+		<div class="f14 f_l">
+			<!--0表示无状态 1表示愿意承担企业合伙人 2表示不愿意承担企业合伙人-->
+			<span class="info_view" type="radio" rel="genera_partners">
+		    	<input type="radio" class="mt f_l mr5" name="is_partner" value="1" checked="checked"/>
+			    <span class="f_l mr10">是</span>
+			</span>
+			<span class="info_view" type="radio" rel="genera_partners">
+			    <input type="radio" class="mt f_l mr5" name="is_partner" value="2" />
+			    <span class="f_l">否</span>
+			</span> 
+		</div>
+	</div>
+	<div class="blank20"></div>
+	<div class="submit_btn_row webkit-box">
+		<div class="ui-button ui-two-button theme_color button_y" rel="green">确认</div>
+		<div class="ui-button ui-two-button bg_gray button_n" rel="green">取消</div>
+		<input type="hidden" value="1" name="ajax" />
+		<input type="hidden" value="{$deal_id}" name="deal_id" />
+		<input type="hidden" value="{$user_id}" name="user_id" />
+	</div>
+	<div class="blank5"></div>
+</form>
+</div>
+<script type="text/javascript">
+	$(function(){
+		enquiry_money_save();
+		$("#add_enquiry_two_money").find(".button_n").bind("click",function(){
+			$.weeboxs.close();
+		});
+	});
+	
+	function enquiry_money_save(){
+		$("#add_enquiry_two_money .button_y").bind("click",function(){
+			if((isNaN($("input[name='money']").val())||parseFloat($("input[name='money']").val())<=0)||$("input[name='money']").val()=='')
+			{
+				$.showErr("请输入正确的投资金额");
+				return false;
+			}
+			var ajaxurl = $("#add_enquiry_two_money").attr("action");
+			var query = $("#add_enquiry_two_money").serialize();
+			$.ajax({
+				url: ajaxurl,
+				dataType: "json",
+				data:query,
+				type: "POST",
+				success:function(ajaxobj){
+					if(ajaxobj.status==0){
+						
+						$.showSuccess(ajaxobj.info);
+					}
+					if(ajaxobj.status==1){
+						//追加投资成功！
+						$.showErr(ajaxobj.info,function(){
+							location.reload();
+						});
+					}
+				}
+			});
+		});
+		return false;
+	}
+</script>

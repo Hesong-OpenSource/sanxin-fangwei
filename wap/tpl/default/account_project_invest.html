@@ -1,0 +1,118 @@
+{include file="inc/header_account.html"}
+<!--中间部分-->  
+<style type="text/css">
+	body{background:#e8e8e8}
+</style>
+<section class="my_project account_index account_mod">
+	<ul class="tab-nav webkit-box">
+		{if app_conf("INVEST_STATUS") eq 0 || app_conf("INVEST_STATUS") eq 1}
+		<li class="webkit-box-flex tc">
+			<a href="{url_wap r="account#project"}">回报项目({if $deal_cp_sum}{$deal_cp_sum}{else}0{/if})</a>
+		</li>
+		{/if}
+		{if app_conf("INVEST_STATUS") eq 0 || app_conf("INVEST_STATUS") eq 2}
+		<li class="webkit-box-flex tc current">
+			<a href="{url_wap r="account#project_invest"}">股权项目({if $deal_gq_sum}{$deal_gq_sum}{else}0{/if})</a>
+		</li>
+		{/if}
+	</ul>
+	<div class="blank15"></div>
+    <ul>
+    	{foreach from=$deal_list item=deal_item}
+        <li>
+            <div class="pro_box webkit-box">
+            	<a href="{url_wap r="deal#show" p="id=$deal_item.id"}" class="webkit-box-flex">
+	                <div class="pic_show f_l mr5">
+	                    <img src="{function name="get_spec_image" v=$deal_item.image w=50 h=50 g=1}" width="100%" height="100%" />
+	                </div>
+	                <div class="details f_l mr5">
+	                    <h3 class="info_name">
+	                        {function name="msubstr" v=$deal_item.name b=0 e=10}
+	                    </h3>
+	                    <div class="info_all">
+	                        <div class="info_group">
+	                            <label class="label_l">状态：</label>
+	                            <span class="label_r">
+	                                {if $deal_item.is_effect eq 0}
+	                                    {if $deal_item.is_edit eq 1}
+	                                        准备中
+	                                    {else}
+	                                        等待审核
+	                                    {/if}
+	                                {elseif $deal_item.is_effect eq 2}
+	                                    未通过 
+	                                {else}
+	                                    {if $deal_item.is_success eq 1}
+	                                        {if $deal_item.begin_time > $now}未开始{/if}
+	                                        {if $deal_item.end_time < $now and $deal_item.end_time neq 0}已成功{/if}
+	                                        {if $deal_item.begin_time < $now and ($deal_item.end_time > $now or $deal_item.end_time eq 0)}已成功{/if}
+	                                    {else}
+	                                        {if $deal_item.begin_time > $now}未开始{/if}
+	                                        {if $deal_item.end_time < $now and $deal_item.end_time neq 0}未成功{/if}
+	                                        {if $deal_item.begin_time < $now and ($deal_item.end_time > $now or $deal_item.end_time eq 0)}进行中{/if}
+	                                    {/if}
+	                                {/if}
+	                            </span>
+	                        </div>
+	                        <div class="info_group">
+	                            <label class="label_l">类型：</label>
+	                            <span class="label_r">
+	                                {if $deal_item.type eq 1}股权众筹{else}产品众筹{/if}
+	                            </span>
+	                        </div>
+	                    </div>
+	                </div>
+				</a>
+                <div>
+					{if $deal_item.is_effect eq 0}
+						{if $deal_item.is_edit eq 1}
+						<div class="webkit-box">
+							{if $deal_item.type eq 1}
+							{else}
+								<a href="{url_wap r="project#edit" p="id=$deal_item.id"}" rel="编辑" class="oper_btn theme_color mr5 mt15"><i class="fa fa-pencil"></i></a>
+							{/if}
+							<a href="{url_wap r="project#del" p="id=$deal_item.id"}" class="oper_btn del_deal bg_red mt15" rel="删除"><i class="fa fa-remove"></i></a>
+						</div>
+						{/if}
+					{elseif $deal_item.is_effect eq 2}
+						<div class="webkit-box">
+						{if $deal_item.type eq 1}
+						{else}
+							<a href="{url_wap r="project#edit" p="id=$deal_item.id"}" rel="编辑" class="oper_btn theme_color mr5 mt15"><i class="fa fa-pencil"></i></a>
+						{/if}
+						<a href="{url_wap r="project#del" p="id=$deal_item.id"}" class="oper_btn del_deal bg_red mt15" rel="删除"><i class="fa fa-remove"></i></a>
+						</div>
+					{else}
+					<span class="f12">
+						<a href="{url_wap r="deal#update" p="id=$deal_item.id"}">项目日志</a>
+						{if $deal_item.type eq 1}
+						<div class="blank5"></div>
+						<a href="{url_wap r="account#get_leader_list" p="id=$deal_item.id"}">领投资格</a>
+						{/if}
+						{if $deal_item.is_success eq 1}
+							{if $deal_item.type eq 1}
+								<div class="blank5"></div>
+								<a href="{url_wap r="account#get_investor_status" p="id=$deal_item.id&type=0"}">申请列表</a>
+								<div class="blank5"></div>
+								<a href="{url_wap r="account#support" p="id=$deal_item.id&type=1"}">投资列表</a>
+								<div class="blank5"></div>
+								<a href="{url_wap r="account#paid" p="id=$deal_item.id"}">放款记录</a>
+							{else}
+								<div class="blank5"></div>
+								<a href="{url_wap r="account#support" p="id=$deal_item.id"}">支持记录</a>
+								<div class="blank5"></div>
+								<a href="{url_wap r="account#paid" p="id=$deal_item.id"}">放款记录</a>
+							{/if}
+						{/if}
+					</span>
+					{/if}
+				</div>
+            </div>
+        </li>
+        {/foreach}
+    </ul>
+</section>
+<div class="blank15"></div>
+<div class="pages">{$pages}</div>
+<div class="blank15"></div>
+{include file="inc/footer.html"}

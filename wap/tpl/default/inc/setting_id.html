@@ -1,0 +1,293 @@
+{include file="inc/header_account.html"}
+<script type="text/javascript">
+    var ROOT = '{$APP_ROOT}/m.php';
+    var VAR_MODULE = "m";
+    var VAR_ACTION = "a";
+    var WEB_SESSION_ID = '<?php echo es_session::id(); ?>';
+    var EMOT_URL = '{$APP_ROOT}/public/emoticons/';
+    var MAX_FILE_SIZE = "<?php echo (app_conf("MAX_IMAGE_SIZE")/1000000)."MB"; ?>";
+    var UPLOAD_URL ='{$APP_ROOT}/m.php?m=File&a=do_upload&upload_type=0&dir=image' ;
+	var UPLOAD_SWF='{$TMPL}/js/plupload/Moxie.swf';
+	var UPLOAD_XAP='{$TMPL}/js/plupload//Moxie.xap';
+	var ALLOW_IMAGE_EXT= "gif,jpg,jpeg,png,bmp";
+	var MAX_IMAGE_SIZE= "<?php echo (app_conf("MAX_IMAGE_SIZE")/1000000)."MB"; ?>";
+	
+	function get_file_fun(name){
+		$("#"+name).ui_upload({multi:false,
+			FileUploaded:function(ajaxobj){
+				if(ajaxobj.error==1) {
+					$.show_tip(ajaxobj.message);
+				}
+				else {
+
+					$("#"+name+"_image").val(ajaxobj.public_url);
+					$("#"+name+"_u").attr('src',ajaxobj.url).attr({width:"80",height:"80"});
+					$("#"+name+"_text").remove();
+				}
+			},Error:function(error){
+				$.show_tip(error.message);
+	 		}
+	 	});
+	}
+</script>
+<div class="blank15"></div>
+<section class="setting_security_box setting_id_box">
+	<form class="ajax_form_identify" action="{url_wap r="settings#binding_investor"}">
+		{if ($user_info.investor_status neq 1) && ($user_info.is_investor  eq 0 ||($user_info.is_investor gt 0&&$user_info.investor_status eq 2)|| $user_info.identify_name eq '')}
+		<div class="ul_block">
+			<ul class="mb10">
+				{if $user_info.is_investor gt 0&&$user_info.investor_status eq 2&&$user_info.investor_send_info}
+				<li class="webkit-box">
+					<label class="input_lable">错误理由：</label>
+					<span class="list_con webkit-box-flex">{$user_info.investor_send_info}</span>
+				</li>
+				{/if}
+				<li class="webkit-box">
+					<label class="input_lable mr10">类型：</label>
+					<div class="list_con webkit-box-flex">
+						<input type="radio" name="is_investor" value="1" {if $user_info.is_investor==0||$user_info.is_investor==1}checked="checked"{/if} class="mt" style="display:inline-block;margin-top:-3px"/>
+						<span class="mr10">个人会员</span>
+						<input type="radio" name="is_investor" value="2" {if $user_info.is_investor==2}checked="checked"{/if} class="mt" style="display:inline-block;margin-top:-3px"/>
+						<span>企业会员</span>
+					</div>
+				</li>
+				<li class="webkit-box">
+					<label class="input_lable" id="identify_name_str">{if $user_info.is_investor==0||$user_info.is_investor==1}个人{else}法人{/if}身份证姓名：</label>
+					<input type="text" placeholder="请输入身份证姓名" id="" value="{$user_info.identify_name}" class="textbox webkit-box-flex" name="identify_name" />
+				</li>
+				<li class="webkit-box">
+					<label class="input_lable">身份证号码：</label>
+					<input type="text" placeholder="请输入身份证号码" id="" value="{$user_info.identify_number}" class="textbox webkit-box-flex" name="identify_number" />
+				</li>
+				{if app_conf('IDENTIFY_POSITIVE')}
+				<li class="uploadbox">
+					<label class="input_lable">身份证正面：</label>
+					<div class="blank0"></div>
+					<div class="fileupload_box">
+						<label class="fileupload">
+							<div class="pic_show">
+								{if $user_info.identify_positive_image eq ''}
+								<div class="text" id="identify_positive_text">
+									<i class="icon icon_plus"></i>
+									<span class="f12">上传图片</span>
+								</div>
+								{/if}
+								<img id="identify_positive_u" src="{$user_info.identify_positive_image}" {if $user_info.identify_positive_image}width="80" height="80"{/if} />
+								<input type="hidden" name="identify_positive_image" id="identify_positive_image"  value="{$user_info.identify_positive_image}" rel="num" />
+								<input type="button" class="filebox" name="identify_positive" id="identify_positive" />
+								<div class="fileuploading"></div>
+							</div>
+						</label>
+					</div>
+				</li>
+				{/if}
+				{if app_conf('IDENTIFY_NAGATIVE')}
+				<li class="uploadbox">
+					<label class="input_lable">身份证反面：</label>
+					<div class="blank0"></div>
+					<label class="fileupload">
+						<div class="pic_show">
+							{if $user_info.identify_nagative_image eq ''}
+							<div class="text" id="identify_nagative_text">
+								<i class="icon icon_plus"></i>
+								<span class="f12">上传图片</span>
+							</div>
+							{/if}
+							<img id="identify_nagative_u" src="{$user_info.identify_nagative_image}" {if $user_info.identify_nagative_image}width="80" height="80"{/if} />
+							<input type="hidden" name="identify_nagative_image" id="identify_nagative_image" value="{$user_info.identify_nagative_image}" rel="num" />
+							<input type="button" class="filebox" name="identify_nagative" id="identify_nagative" />
+						</div>
+			        </label>
+			        <div class="fileuploading"></div>
+				</li>
+				{/if}
+			</ul>
+			<ul class="{if $user_info.is_investor neq 2}hide{/if} mb10" id="qy_div">
+				<li class="webkit-box">
+					<label class="input_lable">企业名称：</label>
+					<input type="text" placeholder="请输入企业名称" id="" value="{$user_info.identify_business_name}" class="textbox webkit-box-flex" name="identify_business_name" />
+				</li>
+				{if app_conf('BUSINESS_LICENCE')}
+				<li class="uploadbox">
+					<label class="input_lable">营业执照：</label>
+					<div class="blank0"></div>
+					<label class="fileupload">
+						<div class="pic_show">
+							{if $user_info.identify_business_licence eq ''}
+							<div class="text" id="identify_business_licence_text">
+								<i class="icon icon_plus"></i>
+								<span class="f12">上传图片</span>
+							</div>
+							{/if}
+							<img id="identify_business_licence_u" src="{$user_info.identify_business_licence}" {if $user_info.identify_business_licence}width="80" height="80"{/if} />
+							<input type="hidden" name="identify_business_licence" id="identify_business_licence_image" value="{$user_info.identify_business_licence}" rel="num" />
+							<input type="button" class="filebox" name="identify_business_licence" id="identify_business_licence" />
+						</div>
+					</label>
+					<div class="fileuploading"></div>
+				</li>
+				{/if}
+				{if app_conf('BUSINESS_CODE')}
+				<li class="uploadbox">
+					<label class="input_lable">组织机构代码证：</label>
+					<div class="blank0"></div>
+					<label class="fileupload">
+			            <div class="pic_show">
+			            	{if $user_info.identify_business_code eq ''}
+							<div class="text" id="identify_business_code_text">
+								<i class="icon icon_plus"></i>
+								<span class="f12">上传图片</span>
+							</div>
+							{/if}
+			                <img id="identify_business_code_u" src="{$user_info.identify_business_code}" {if $user_info.identify_business_code}width="80" height="80"{/if} />
+			                <input type="hidden" name="identify_business_code" id="identify_business_code_image" value="{$user_info.identify_business_code}" rel="num" />
+			            	<input type="button" class="filebox" name="identify_business_code" id="identify_business_code" />
+			            </div>
+			        </label>
+			        <div class="fileuploading"></div>
+				</li>
+				{/if}
+				{if app_conf('BUSINESS_TAX')}
+				<li class="uploadbox">
+					<label class="input_lable">税务登记证：</label>
+					<div class="blank0"></div>
+					<label class="fileupload">
+			            <div class="pic_show">
+			            	{if $user_info.identify_business_tax eq ''}
+							<div class="text" id="identify_business_tax_text">
+								<i class="icon icon_plus"></i>
+								<span class="f12">上传图片</span>
+							</div>
+							{/if}
+			                <img id="identify_business_tax_u" src="{$user_info.identify_business_tax}" {if $user_info.identify_business_tax}width="80" height="80"{/if} />
+			                <input type="hidden" name="identify_business_tax" id="identify_business_tax_image" value="{$user_info.identify_business_tax}" rel="num" />
+			            	<input type="button" class="filebox" name="identify_business_tax" id="identify_business_tax" />
+			            </div>
+			        </label>
+				</li>
+				{/if}
+			</ul>
+			<ul>
+				<li class="webkit-box">
+					<label class="input_lable">手机号：</label>
+					<div class="text webkit-box-flex">{function name="hideMobile" v=$user_info.mobile}</div>
+				</li>
+				<li class="last webkit-box">
+					<label class="input_lable">验证码：</label>
+					<input type="text" placeholder="请输入验证码" value="" name="verify" class="textbox webkit-box-flex mr5" />
+					<input type="button" value="获取验证码" class="code_btn bg_red" id="J_send_sms_verify_iden" />
+				</li>
+			</ul>
+			<div class="blank0"></div>
+			<div class="submit_btn_row mod_main">
+				<div class="ui-button theme_color" rel="green">提交</div>
+				<input type="hidden" value="1" name="ajax" />
+				<input type="hidden" value="0" name="step" />
+			</div>
+			<div class="blank15"></div>
+		</div>
+		{/if}
+	</form>
+	{if $user_info.investor_status eq 1}
+	<div class="ul_block">
+		<ul class="mb10">
+			<li class="webkit-box">
+				<label class="input_lable">类型：</label>
+				<span class="webkit-box-flex">{if $user_info.is_investor==0||$user_info.is_investor==1}个人会员{/if}{if $user_info.is_investor==2}企业会员{/if}</span>
+			</li>
+			<li class="webkit-box">
+				<label class="input_lable">{if $user_info.is_investor==0||$user_info.is_investor==1}个人{else}法人{/if}身份证姓名：</label>
+				<input type="text" id="" value="{$user_info.identify_name}" class="textbox webkit-box-flex" name="identify_name" readonly="readonly" />
+			</li>
+			<li class="webkit-box">
+				<label class="input_lable">身份证号码：</label>
+				<input type="text" id="" value="{$user_info.identify_number}" class="textbox webkit-box-flex" name="identify_number" readonly="readonly" />
+			</li>
+			{if app_conf('IDENTIFY_POSITIVE')}
+			<li class="img_box webkit-box">
+				<label class="input_lable">身份证正面：</label>
+				<div class="webkit-box-flex">
+					<a href="{$user_info.identify_positive_image}">
+						<img src="{function name="get_spec_image" v=$user_info.identify_positive_image w="90" h="90" g="1"}" />
+					</a>
+				</div>	
+			</li>
+			{/if}
+			{if app_conf('IDENTIFY_NAGATIVE')}
+			<li class="img_box webkit-box">
+				<label class="input_lable">身份证反面：</label>
+				<div class="webkit-box-flex">
+					<a href="{$user_info.identify_nagative_image}">
+						<img src="{function name="get_spec_image" v=$user_info.identify_nagative_image w="90" h="90" g="1"}" />
+					</a>
+				</div>
+			</li>
+			{/if}
+		</ul>
+		{if $user_info.is_investor eq 2}
+		<ul class="mb10">
+			<li class="webkit-box">
+				<label class="input_lable">企业名称：</label>
+				<input type="text" placeholder="请输入企业名称" id="" value="{$user_info.identify_business_name}" class="textbox webkit-box-flex" name="identify_business_name" readonly="readonly" />
+			</li>
+			{if app_conf('BUSINESS_LICENCE')}
+			<li class="img_box webkit-box">
+				<label class="input_lable">营业执照：</label>
+				<div class="webkit-box-flex">
+					<a href="{$user_info.identify_business_licence}">
+						<img src="{function name="get_spec_image" v=$user_info.identify_business_licence w="90" h="90" g="1"}" />
+					</a>
+				</div>
+			</li>
+			{/if}
+			{if app_conf('BUSINESS_CODE')}
+			<li class="img_box webkit-box">
+				<label class="input_lable">组织机构代码证：</label>
+				<div class="webkit-box-flex">
+					<a href="{$user_info.identify_business_code}">
+						<img src="{function name="get_spec_image" v=$user_info.identify_business_code w="90" h="90" g="1"}" />
+					</a>
+				</div>
+			</li>
+			{/if}
+			{if app_conf('BUSINESS_TAX')}
+			<li class="img_box webkit-box">
+				<label class="input_lable">税务登记证：</label>
+				<div class="webkit-box-flex">
+					<a href="{$user_info.identify_business_tax}">
+						<img src="{function name="get_spec_image" v=$user_info.identify_business_tax w="90" h="90" g="1"}" />
+					</a>
+				</div>
+			</li>
+			{/if}
+		</ul>
+		{/if}
+	</div>
+	{/if}
+</section>
+<div class="blank15"></div>
+<script type="text/javascript">	
+	$(function(){
+		get_file_fun("identify_positive");
+		get_file_fun("identify_nagative");
+		get_file_fun("identify_business_licence");
+		get_file_fun("identify_business_code");
+		get_file_fun("identify_business_tax");
+		bind_ajax_form_custom(".ajax_form_identify");
+		$("#J_send_sms_verify_iden").bind("click",function(){
+			send_mobile_verify_sms_custom(2,'',"#J_send_sms_verify_iden");
+		});
+		$(".ajax_form_identify").find("input[name='is_investor']").bind('click',function(){
+			$("#qy_div").toggle();
+			get_file_fun("identify_business_licence");
+			get_file_fun("identify_business_code");
+			get_file_fun("identify_business_tax");
+			if($(this).val()==2){
+				$("#identify_name_str").html("法人身份证姓名：");
+			}else{
+				$("#identify_name_str").html("个人身份证姓名：");
+			}
+		});
+	});
+</script>
+{include file="inc/footer.html"} 

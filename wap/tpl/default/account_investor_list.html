@@ -1,0 +1,262 @@
+{include file="inc/header_account.html"}
+<style type="text/css">
+	.ui_small_button{width:90px;display:inline-block;}
+</style>
+<section class="account_index my_project account_mod">
+	<ul class="tab-nav webkit-box">
+		<li class="webkit-box-flex tc {if $type eq 0}current{/if}">
+			<a href="{url_wap r="account#get_investor_status" p="type=0&id=$deal_id"}">询价</a>
+		</li>
+		<li class="webkit-box-flex tc {if $type eq 1}current{/if}">
+			<a href="{url_wap r="account#get_investor_status" p="type=1&id=$deal_id"}">领投</a>
+		</li>
+		<li class="webkit-box-flex tc {if $type eq 2}current{/if}">
+			<a href="{url_wap r="account#get_investor_status" p="type=2&id=$deal_id"}">跟投</a>
+		</li>
+		<li class="webkit-box-flex tc">
+			<a href="{url_wap r="account#get_leader_list" p="type=2&id=$deal_id"}">领投资格</a>
+		</li>
+	</ul>
+	{if $investor_list}
+	<div class="blank10"></div>
+	<div class="ul_block ul_block_list">
+		{foreach from=$investor_list item=item}
+		<ul>
+			<li class="webkit-box">
+				<label class="input_lable">序号：</label>
+				<div class="webkit-box-flex">
+					{$item.id}
+				</div>
+			</li>
+			<li class="webkit-box">
+				<label class="input_lable">项目：</label>
+				<div class="webkit-box-flex">
+					<a href="{url_wap r="deal#show" p="id=$item.deal_id" }" target="_blank" >
+						<img src="{$deal.image}" width=30 height=30 style="margin:0" />
+					</a>
+				</div>
+			</li>
+			<li class="webkit-box">
+				<label class="input_lable">投资人：</label>
+				<div class="webkit-box-flex">
+					{$item.user_name}
+				</div>
+			</li>
+			{if $type==0}
+			<li class="webkit-box">
+				<label class="input_lable">项目估值：</label>
+				<div class="webkit-box-flex">
+					¥{function name="round" v=$item.stock_value e=2}
+				</div>
+			</li>
+			{/if}
+			<li class="webkit-box">
+				<label class="input_lable">投资金额：</label>
+				<div class="webkit-box-flex">
+					<span class="f_money">¥{function name="round" v=$item.money e=2}</span>
+				</div>
+			</li>
+			<li class="webkit-box">
+				<label class="input_lable">时间：</label>
+				<div class="webkit-box-flex">
+					{function name="to_date" v=$item.create_time}
+				</div>
+			</li>
+			<li class="webkit-box">
+				<label class="input_lable">操作：</label>
+				<div class="webkit-box-flex">
+					{if $item.type==0}
+						{if $item.investor_money_status==0}
+							
+							{if $now>$deal.begin_time and $now<$deal.end_time}
+								{if $deal.is_success eq 1}
+									<a href="javascript:void(0);" class="examine_yes ui_button ui_small_button theme_color" rel="{$item.id}" title="{function name="round" v=$item.stock_value e=2}">通过询价</a>&nbsp;
+									<a href="javascript:void(0);" class="examine_no ui_button ui_small_button bg_red"  rel="{$item.id}">拒绝询价</a>
+								{else}
+									项目未成功
+								{/if}
+							{else}
+							审核未通过
+							{/if}
+							
+						{elseif $item.investor_money_status==1}
+							{if $now>$deal.begin_time and $now<$deal.end_time}
+								审核通过,未开始支付
+							{else}
+							审核通过,等待用户支付
+							{/if}
+						{elseif $item.investor_money_status==2}
+							<span class="red">审核不通过</span>
+						{elseif $item.investor_money_status==3}
+							支付完成
+						{elseif $item.investor_money_status==4}
+							该用户未付款，已违约
+						{/if}
+					{elseif $item.type==1}
+						{if $item.status==0}
+							<a class="lead_yes ui_button ui_small_button theme_color" rel="{$item.id}" title="{function name="round" v=$item.stock_value e=2}">允许成为领投人</a>&nbsp;
+							<a class="lead_no"  rel="{$item.id}">不允许成为领投人</a>
+						{elseif $item.status==1}
+							{if $item.investor_money_status==0}
+								
+								{if $now>$deal.begin_time and $now<$deal.end_time}
+									{if $deal.is_success eq 1}
+										<a href="javascript:void(0);" class="lead_examine_yes ui_button ui_small_button theme_color" rel="{$item.id}" title="{function name="round" v=$item.stock_value e=2}">允许领投</a>&nbsp;
+										<a href="javascript:void(0);" class="lead_examine_no ui_button ui_small_button bg_red"  rel="{$item.id}">拒绝领投</a>
+									{else}
+										项目未成功
+									{/if}
+								{else}
+								审核未通过
+								{/if}
+								
+							{elseif $item.investor_money_status==1}
+								{if $now>$deal.begin_time and $now<$deal.end_time}
+									审核通过,未开始支付
+								{else}
+								审核通过,等待用户支付
+								{/if}
+							{elseif $item.investor_money_status==2}
+								<span class="red">审核不通过</span>
+							{elseif $item.investor_money_status==3}
+								支付完成
+							{elseif $item.investor_money_status==4}
+								该用户未付款，已违约
+							{/if}
+						{elseif $item.status==2}
+							<span class="red">投资人审核不通过</span>
+						{/if}
+					{elseif $item.type==2}
+						{if $item.investor_money_status==0}
+							{if $now>$deal.begin_time and $now<$deal.end_time}
+								{if $deal.is_success eq 1}
+									<a href="javascript:void(0);" class="gentou_yes ui_button  ui_small_button theme_color" rel="{$item.id}" title="{function name="round" v=$item.stock_value e=2}">允许跟投</a>&nbsp;
+									<a href="javascript:void(0);" class="gentou_no ui_button  ui_small_button bg_red"  rel="{$item.id}">拒绝跟投</a>
+								{else}
+									  项目未成功
+								{/if}
+							{else}
+							审核未通过
+							{/if}
+						{elseif $item.investor_money_status==1}
+							{if $now>$deal.begin_time and $now<$deal.end_time}
+								审核通过,未开始支付
+							{else}
+							审核通过,等待用户支付
+							{/if}
+						{elseif $item.investor_money_status==2}
+							<span class="red">审核不通过</span>
+						{elseif $item.investor_money_status==3}
+							支付完成
+						{elseif $item.investor_money_status==4}
+							该用户未付款，已违约
+						{/if}
+					{/if}
+				</div>
+			</li>
+		</ul>
+		<div class="blank10"></div>
+		{/foreach}
+		<div class="pages">{$pages}</div>
+		<div class="blank15"></div>
+	</div>
+	{else}
+	<div class="tc mod_main">
+		还没有{$title}记录
+	</div>
+	{/if}
+</section>
+<script>
+$(function(){
+	$(".examine_yes").bind('click',function(){
+		var id=$(this).attr("rel");
+		var stock_money=$(this).attr("title");
+		deal_investor(id,1,"是否要通过该询价，通过后您的项目融资金额将会变成"+stock_money,0)
+		 
+	});
+	$(".examine_no").bind('click',function(){
+		var id=$(this).attr("rel");
+		var stock_money=$(this).attr("title");
+		deal_investor(id,0,"是否要拒绝该询价",0);
+		 
+	});
+	
+	$(".gentou_yes").bind('click',function(){
+			var id=$(this).attr("rel");
+			deal_investor(id,1,"是否允许跟投",2);
+		 
+	});
+	$(".gentou_no").bind('click',function(){
+		var id=$(this).attr("rel");
+			deal_investor(id,0,"是否要拒绝跟投",2);
+		 
+	});
+	
+	$(".lead_yes").bind('click',function(){
+			var id=$(this).attr("rel");
+			deal_lead(id,1,"是否允许该用户成为领投人",2);
+		 
+	});
+	$(".lead_no").bind('click',function(){
+		var id=$(this).attr("rel");
+			deal_lead(id,0,"是否要拒绝该用户成为领投人",2);
+		 
+	});
+	
+	$(".lead_examine_yes").bind('click',function(){
+			var id=$(this).attr("rel");
+			deal_investor(id,1,"是否要通过投资",1);
+		 
+	});
+	$(".lead_examine_no").bind('click',function(){
+		var id=$(this).attr("rel");
+			deal_investor(id,0,"是否要拒绝该领投人投资",1);
+		 
+	});
+	
+	
+});
+function deal_investor(id,status,msg,type){
+	var ajaxurl = APP_ROOT+"/index.php?ctl=account&act=investor_examine&status="+status+"&id="+id+"&type="+type;
+	$.showConfirm(msg,function(){
+		$.ajax({
+			url:ajaxurl,
+			dataType:"json",
+			type:'POST',
+			success:function(ajaxobj){
+				if(ajaxobj.status==1){
+					//$.showSuccess(ajaxobj.info);
+					window.location.reload();
+				}else{
+					$.showErr(ajaxobj.info,function(){
+						$.weeboxs.close();
+					});
+					
+				}
+			}
+		});
+	});
+}
+function deal_lead(id,status,msg,type){
+	var ajaxurl = APP_ROOT+"/index.php?ctl=account&act=lead_examine&status="+status+"&id="+id+"&type="+type;
+		$.showConfirm(msg,function(){
+			$.ajax({
+				url:ajaxurl,
+				dataType:"json",
+				type:'POST',
+				success:function(ajaxobj){
+					if(ajaxobj.status==1){
+						//$.showSuccess(ajaxobj.info);
+						window.location.reload();
+					}else{
+						$.showErr(ajaxobj.info,function(){
+							$.weeboxs.close();
+						});
+						
+					}
+				}
+			});
+		});
+}
+</script>
+{include file="inc/footer.html"} 

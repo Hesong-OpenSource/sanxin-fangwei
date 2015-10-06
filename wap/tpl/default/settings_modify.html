@@ -1,0 +1,204 @@
+{include file="inc/header_account.html"}
+<?php
+$this->_var['dpagejs'][] = $this->_var['TMPL_REAL']."/js/switch_city.js";
+$this->_var['dcpagejs'][] = $this->_var['TMPL_REAL']."/js/switch_city.js";
+?>
+<script type="text/javascript" src="{function name="parse_script" v="$dpagejs" c="$dcpagejs"}"></script>
+<script type="text/javascript">
+    var ROOT = '{$APP_ROOT}/m.php';
+    var VAR_MODULE = "m";
+    var VAR_ACTION = "a";
+    var WEB_SESSION_ID = '<?php echo es_session::id(); ?>';
+    var EMOT_URL = '{$APP_ROOT}/public/emoticons/';
+    var MAX_FILE_SIZE = "<?php echo (app_conf("MAX_IMAGE_SIZE")/1000000)."MB"; ?>";
+    var UPLOAD_URL ='{$APP_ROOT}/wap/index.php?ctl=avatar&act=upload&uid={$user_info.id}';
+	var UPLOAD_SWF='{$TMPL}/js/plupload/Moxie.swf';
+	var UPLOAD_XAP='{$TMPL}/js/plupload/Moxie.xap';
+	var ALLOW_IMAGE_EXT= "gif,jpg,jpeg,png,bmp";
+	var MAX_IMAGE_SIZE= "<?php echo (app_conf("MAX_IMAGE_SIZE")/1000000)."MB"; ?>";
+	
+	function get_file_fun(name){
+    		$("#"+name).ui_upload({multi:false,
+		FileUploaded:function(ajaxobj){
+ 				if(ajaxobj.error==1)
+				{
+					$.show_tip(ajaxobj.info);
+				}else{
+					$("#avatar").attr("src",ajaxobj.middle_url+"?r="+Math.random());
+					$("#"+name+"_u").val(ajaxobj.public_url);
+ 				}
+			},Error:function(error){
+			$.show_tip(error.message);
+ 		}});
+	}
+</script>
+<section class="settings_modify">
+	<form id="user_register_form" class="ajax_form" action="{url_wap r="settings#save_modify"}"  method="post">
+		<div class="ul_block">
+			<ul>
+				<li class="u_img webkit-box">
+					<label class="input_lable mr10">头像</label>
+					<div class="list_con webkit-box-flex" style="padding:10px 0;">
+						<a>
+							<div class="user_pic">
+			                    <img id="avatar" src="{function name="get_user_avatar" uid=$user_info.id type="middle"}" width="100%">
+				                <input type="hidden" name="avatar_file_u" id="avatar_file_u" value="{$user_info.identify_business_tax}" rel="num" />
+				            	<input type="button" class="filebox" name="avatar_file" id="avatar_file" />
+				            	<div class="fileuploading"></div>
+			                </div>
+							<div class="go_see" style="top: 34px;"><i class="fa fa-chevron-right"></i></div>
+						</a>
+					</div>
+				</li>
+				<li class="webkit-box">
+					<label class="input_lable mr10">账号</label>
+					<input type="text" class="textbox webkit-box-flex" value="{$user_info.user_name}" readonly="readonly"/>
+				</li>
+				<li class="webkit-box">
+					<label class="input_lable mr10">邮箱</label>
+					{if $user_info.email}
+					<input type="text" value="{$user_info.email}" class="textbox webkit-box-flex" readonly="readonly" />
+					<a href="{url_wap r="settings#security" v="method=setting-email-box"}">修改</a>
+					{else}
+					<div class="textbox webkit-box-flex">
+						邮箱未绑定，点击&nbsp;<a href="{url_wap r="settings#security" p="method=setting-email-box"}" class="f_red" style="text-decoration:underline">去绑定</a>
+					</div>
+					{/if}
+				</li>
+				<li class="webkit-box">
+					<label class="input_lable mr10">性别</label>
+					<div class="cate_name_list webkit-box-flex">
+						<label>
+							<input type="radio" name="sex" value="1" {if $user_info.sex eq 1}checked="checked"{/if} class="mt mr5" />男
+						</label>
+						<label>
+							<input type="radio" name="sex" value="0" {if $user_info.sex eq 0}checked="checked"{/if} class="mt mr5" />女
+						</label>
+						<label>
+							<input type="radio" name="sex" value="-1" {if $user_info.sex eq -1}checked="checked"{/if} class="mt mr5" />未知
+						</label>
+					</div>
+					<div class="blank"></div>
+				</li>
+				<li class="webkit-box">
+					<label class="input_lable mr10">省市</label>
+					<div class="list_con webkit-box-flex">
+					  	<div class="select_mod"> 
+						  	<select name="province" id="province" class="f_select">               
+			                    <option value="" rel="0">请选择省份</option>          
+			                    {foreach from=$region_lv2 item=region}
+			                    <option value="{$region.name}" rel="{$region.id}" {if $region.selected}selected="selected"{/if}>{$region.name}</option>
+			                    {/foreach}
+		                  	</select>
+					  	</div>
+					  	<div class="select_mod"> 
+						  	<select name="city" id="city" class="f_select">             
+			                   	<option value="" rel="0">请选择城市</option>
+			                    {foreach from=$region_lv3 item=region}
+			                    <option value="{$region.name}" rel="{$region.id}" {if $region.selected}selected="selected"{/if}>{$region.name}</option>
+			                    {/foreach}
+		                  	</select>
+					  	</div>
+					</div>
+					<div class="blank"></div>
+				</li>
+				<li class="webkit-box">
+					<label class="input_lable mr10">所在公司</label>
+					<input type="textbox webkit-box-flex" value="{$user_info.company}" class="textbox" name="company" />
+				</li>
+				<li class="webkit-box">
+					<label class="input_lable mr10">所在职位</label>
+					<input type="textbox webkit-box-flex" value="{$user_info.job}" class="textbox" id="job" name="job" />
+				</li>
+				<li class="textarea webkit-box">
+					<label class="input_lable mr10" style="line-height:1;text-align:left">
+						<div class="pt5">
+							投资领域<br /><span class="f_999 f12" style="font-weight:normal">(最多选择3个)</span>
+						</div>
+					</label>
+					<div class="cate_name_list webkit-box-flex" id="cate_name_list">
+						{foreach from=$deal_cate item=cates_item name=key}
+	                    <label class="cate_name_label">
+	                        <input class="mt mr5" type="checkbox" name="cates[{$cates_item.id}]" id="pc" value="{$cates_item.name}" {if $user_info.cate_name[$cates_item.id]}checked="checked"{/if} rel="cate_name" />{$cates_item.name}
+	                    </label>
+	                    {/foreach}
+	                </div>
+				</li>
+				<li class="textarea webkit-box">
+					<label class="input_lable">简介</label>
+					<textarea placeholder="这里可以输入大约300字的自我介绍，让大家多了解你" id="intro" name="intro" class="textbox webkit-box-flex ml10">{$user_info.intro}</textarea>
+				</li>
+				<li class="webkit-box">
+					<label class="input_lable">微博</label>
+					<input id="weibo_url" type="text"  name="weibo_url[]" value="{$weibo_list[0].weibo_url}" class="textbox webkit-box-flex" placeholder="输入微博地址"/>
+				</li>
+				<li class="webkit-box">
+				<label class="input_lable">手机号</label>
+				{if $user_info.mobile}
+				<input type="text" value="{$user_info.mobile}" class="textbox" {if $user_info.mobile}readonly="readonly"{/if} />
+				{else}
+				<div class="ml10 text webkit-box-flex">
+					未绑定手机，点击&nbsp;<a href="{url_wap r="settings#security" v="method=setting-mobile-box"}" class="f_red" style="text-decoration:underline">去绑定</a>
+				</div>
+				{/if}
+				</li>
+				
+			</ul>
+		</div>
+		<div class="submit_row mod_main">
+			<input class="ui-button theme_color" type="submit" value="确认修改"/>
+			<input type="hidden" value="wap" name="from" />	
+			<input type="hidden" value="1" name="ajax" />	
+		</div>
+	</form>
+</section>
+<div class="blank15"></div>
+<script type="text/javascript">
+	get_file_fun("avatar_file");
+</script>
+<script type="text/javascript">
+	(function(){
+		var cate_name_list=$("#cate_name_list");
+		var cate_name=cate_name_list.find("input[rel='cate_name']");
+		var notChecked = cate_name_list.find("input[rel='cate_name']").not("input:checked");
+		var isChecked = cate_name_list.find("input[rel='cate_name']:checked");
+		cate_name.bind('click',function(){
+			check();
+		});
+	  	if(isChecked.length>=3){
+	  		for(var i=0; i<notChecked.length; i++){
+				notChecked[i].disabled=true;
+			}
+	  	}
+		function disableCheckBox(){ 
+			for(var i=0; i<cate_name.length; i++){
+				if(!cate_name[i].checked) 
+				cate_name[i].disabled=true;
+			}
+		}
+		function ableCheckBox(){
+		    for(var i=0; i<cate_name.length; i++)
+		    cate_name[i].disabled = false;
+		}
+
+		function check(){
+		    var sun=0;
+		    for(var i=0; i<cate_name.length; i++){
+		        if(cate_name[i].type=="checkbox" && cate_name[i].checked)
+		        	sun++;
+		        if(sun<3) {
+		            ableCheckBox();
+		            //break; 
+		        } else if (sun==3) {
+		            disableCheckBox();
+		           	event.srcElement.checked = true;
+		            break;
+		        } else if (sun>3) {
+		            event.srcElement.checked = false;
+		            break;
+		        }
+		    }
+		}
+	})();
+</script>
+{include file="inc/footer.html"}

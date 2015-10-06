@@ -1,0 +1,71 @@
+{include file="./inc/header.html"}
+  <?php
+		$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/cart_index.css";	
+		$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/youhui_comment_list.css";
+		$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/user_addr_list.css";
+		$this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/pay_order_index.css";	
+?>
+<link rel="stylesheet" type="text/css" href="{function name="parse_css" v="$pagecss"}" />
+<script type="text/javascript">
+ 		//调用微信JS api 支付
+		function jsApiCall()
+		{
+			WeixinJSBridge.invoke(
+				'getBrandWCPayRequest',
+				{$jsApiParameters},
+				function(res){
+					
+ 					if(res.err_msg=='get_brand_wcpay_request:fail'){
+						//alert(res.err_code+res.err_desc+res.err_msg);
+						$.showSuccess('支付失败',function(){
+							
+						});
+					}
+					if(res.err_msg=='get_brand_wcpay_request:cancel '){
+						$.showSuccess('支付取消',function(){
+							
+						});
+					}
+					if(res.err_msg=='get_brand_wcpay_request:ok'){
+						$.showSuccess('恭喜您支付成功',function(){
+							location.href="{url_wap r="deal#index" p="id=$data.deal_id"}";
+						});
+					}else{
+						//$.showSuccess(res.err_msg);
+					}
+ 				}
+			);
+		}
+
+		function callpay()
+		{
+			if (typeof WeixinJSBridge == "undefined"){
+			    if( document.addEventListener ){
+			        document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+			    }else if (document.attachEvent){
+			        document.attachEvent('WeixinJSBridgeReady', jsApiCall); 
+			        document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+			    }
+			}else{
+			    jsApiCall();
+			}
+		}
+        function  callpay_1() {
+            wx.chooseWXPay({$jsApiParameters});
+        }
+	</script>
+<div class="pay_order_index p15">
+	{if $data.notice_sn}
+ 	<div class="pay_info">
+		<div class="h font-fc8">订单编号：{$data.notice_sn}</div>
+ 	</div>
+	{/if}
+ 
+	<div class="pay_info">
+  	 	<a href="javascript:void(0);" class="ui-button theme_color mt10"  {if $type eq 'V4'} onclick="callpay_1()"{else} onclick="callpay()"{/if}>支付 {$data.money}</a>
+	</div>
+ 
+</div>
+
+{include file="inc/footer.html"} 
+ 

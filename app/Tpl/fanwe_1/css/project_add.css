@@ -1,0 +1,85 @@
+/* project_add project_edit 开始 */
+.agreement_hd {
+	width:100%;
+	height:65px;
+	background:url(../images/images/agreementhd.png) no-repeat center;
+}
+.agreement_bd{
+	background:#fff;
+	border:1px solid #dedede;
+	border-top:0;
+	width:998px;
+}
+.agreementlf {
+	width:620px;
+	padding-bottom:50px;
+	background:#f8f8f8;
+	overflow:hidden;
+}
+.agreementrt {
+	width:378px;
+}
+.agreementlist {
+	margin:35px 0 0 60px;
+}
+.agreementlf label {
+	width:110px;
+	color:#999;
+	margin-right:15px;
+	text-align:right;
+	float:left;
+	font-size:13px;
+}
+.se {
+	color:#3789e0;
+	cursor:pointer;
+}
+.addqs {
+	width:110px;
+	display:inline-block;
+	margin-right:15px;
+	text-align:right;
+	float:left;
+	font-size:13px;
+}
+
+.pro_msg{
+	font-size:20px;
+	color:#000;
+	margin:35px 0 15px 56px;
+}
+.setlist{
+	padding:5px 0;
+	margin:5px 0;
+	width: 100%;
+}
+.setleft label{
+	width: 90px;
+	color: #666666;
+	margin-right: 15px;
+	text-align: right;
+	float: left;
+	font-size: 13px;
+}
+.setmid{
+	color:#999;
+	display: inline-block;
+	margin-top:10px;
+}
+.setleft input {
+	vertical-align:top;
+	height: 22px;
+	line-height: 23px;
+	border: 1px solid #d7d7d7;
+	border-radius: 5px;
+}
+.setleft textarea {
+	width:365px;
+	height:115px;
+	line-height:22px;
+	display:block;
+	border:1px solid #d7d7d7;
+	border-radius:5px;
+	padding:11px 0px 11px 5px;
+}
+/* project_add project_edit 结束 */

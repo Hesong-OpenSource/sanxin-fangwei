@@ -1,0 +1,75 @@
+{include file="inc/header.html"} 
+<?php
+
+$this->_var['dpagecss'][] = $this->_var['TMPL_REAL']."/css/account.css";
+?>
+<link rel="stylesheet" type="text/css" href="{function name="parse_css" v="$dpagecss"}" />
+
+<div class="blank"></div>
+
+<div class="shadow_bg">
+	<div class="wrap white_box"">
+		<div class="page_title">
+			充值记录
+		</div>
+		<div class="switch_nav">
+			<ul>
+				<li><a href="{url r="account#index"}">支持的项目</a></li>
+				<li><a href="{url r="account#project"}">我的项目</a></li>
+				<li><a href="{url r="account#focus"}">关注的项目</a></li>
+				<li><a href="{url r="account#credit"}">收支明细</a></li>
+				<li class="current"><a href="{url r="account#record"}">充值记录</a></li>
+			</ul>
+		</div>
+		
+		<div class="blank"></div>
+		
+		{include file="inc/money_box.html"} 
+		
+		<div class="full">
+		{if $record_list}
+		<table class="data-table">
+			<tr>
+				<th>项目名称</th>
+				<th>支付时间</th>
+				<th>金额</th>
+				<th>是否支付</th>
+			</tr>
+			{foreach from=$record_list item=record_item}
+				<tr>
+					<td>
+						{if $record_item.deal_name eq null}在线支付{/if}
+					</td>
+					<td>
+						{if $record_item.pay_time eq 0}无{/if}
+						{if $record_item.create_time neq 0}{function name="to_date" v=$record_item.pay_time}{/if}
+					</td>
+					<td>
+						{$record_item.money}
+					</td>
+					<td>
+						{if $record_item.is_paid eq 1}支付{/if}
+						{if $record_item.is_paid eq 0}未支付{/if}
+					</td>
+				
+				</tr>
+			{/foreach}
+		</table>
+			
+		{else}
+		<div class="empty_tip">
+			还没有任何充值记录
+		</div>
+		{/if}
+		
+		</div>
+		<div class="blank"></div>
+		<div class="pages">{$pages}</div>
+		<div class="blank"></div>
+		
+		<div class="blank"></div>
+		
+	</div>
+</div>
+<div class="blank"></div>
+{include file="inc/footer.html"} 

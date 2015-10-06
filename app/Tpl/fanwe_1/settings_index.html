@@ -1,0 +1,281 @@
+{include file="inc/header.html"} 
+<?php
+$this->_var['dpagejs'][] = $this->_var['TMPL_REAL']."/js/ajaxupload.js";
+$this->_var['dpagejs'][] = $this->_var['TMPL_REAL']."/js/switch_city.js";
+$this->_var['dcpagejs'][] = $this->_var['TMPL_REAL']."/js/switch_city.js";
+?>
+<script type="text/javascript" src="{function name="parse_script" v="$dpagejs" c="$dcpagejs"}"></script>
+<script type="text/javascript">
+    var ROOT = '{$APP_ROOT}/m.php';
+    var VAR_MODULE = "m";
+    var VAR_ACTION = "a";
+    var WEB_SESSION_ID = '<?php echo es_session::id(); ?>';
+    var EMOT_URL = '{$APP_ROOT}/public/emoticons/';
+    var MAX_FILE_SIZE = "<?php echo (app_conf("MAX_IMAGE_SIZE")/1000000)."MB"; ?>";
+    var UPLOAD_URL ='{$APP_ROOT}/index.php?ctl=avatar&act=upload&uid={$user_info.id}' ;
+	var UPLOAD_SWF='{$TMPL}/js/plupload/Moxie.swf';
+	var UPLOAD_XAP='{$TMPL}/js/plupload/Moxie.xap';
+	var ALLOW_IMAGE_EXT= "gif,jpg,jpeg,png,bmp";
+	var MAX_IMAGE_SIZE= "<?php echo (app_conf("MAX_IMAGE_SIZE")/1000000)."MB"; ?>";
+	function get_file_fun(name){
+		$("#"+name).ui_upload({multi:false,
+			FileUploaded:function(ajaxobj){
+				if(ajaxobj.status!=1)
+				{
+					$.showErr(ajaxobj.message);
+				}else{
+					 $("#avatar").attr("src",ajaxobj.middle_url+"?r="+Math.random());
+	 				}
+			},Error:function(error){
+				$.showErr(error.message);
+ 			}
+ 		});
+	}
+</script>
+<style>
+	.tip_box{height:41px;line-height:41px;}
+	.tip_box .form_tip{color:red;}
+	.tip_box .form_success{color:green;}
+	.control-group .select_lable{height:37px;line-height:37px}
+	.left{width:650px}
+	.control-group .control-label{width:100px;}
+	.control-group .control-label .cate_note{font-size:12px;line-height:14px;color:#999;}
+	.control-group .radio_lable{height:auto;}
+</style>
+{include file="inc/home_user_info.html"}
+<!--中间开始-->
+<div class="dlmain Myhomepage">
+	{include file="inc/account_left.html"} 
+	<div class="homeright pageright f_r">
+		<div class="list_title clearfix">
+			<div class="cur">
+				<span>个人资料</span>
+			</div>
+		</div>
+		<div class="blank"></div>
+		<div class="left">
+			<form class="ajax_form" action="{url r="settings#save_index"}" id="user_register_form" >			
+				<div class="control-group">
+					<label class="control-label">会员名称:</label>
+					<div class="control-text">
+						<input type="text" value="{$user_info.user_name}" class="textbox" disabled="true" />
+					</div>
+					<div class="blank0"></div>
+				</div>
+				<div class="control-group {if !($user_info.email)}smaller-control-group{/if}">
+					<label class="control-label">EMAIL:</label>
+					<div class="control-text">
+						{if $user_info.email}
+						<input type="text" value="{$user_info.email}" class="textbox" disabled="true" />
+						<a href="{url r="settings#security" v="method=setting-email-box"}">修改</a>
+						{else}
+						邮箱未绑定，点击&nbsp;<a href="{url r="settings#security" p="method=setting-email-box"}" class="f_red" style="text-decoration:underline">去绑定</a>
+						{/if}
+					</div>
+					<div class="blank0"></div>
+				</div>
+				<div class="control-group {if !($user_info.identify_name)}smaller-control-group{/if}">
+					<label class="control-label">真实姓名:</label>
+					<div class="control-text">
+						{if $user_info.identify_name}
+						<input type="text" value="{$user_info.identify_name}" class="textbox" disabled="true" />
+						{else}
+						未实名认证，点击&nbsp;<a href="{url r="settings#security" p="method=setting-id-box"}" class="f_red" style="text-decoration:underline">去认证</a>
+						{/if}
+					</div>
+					<div class="blank0"></div>
+				</div>
+				<div class="control-group {if !($user_info.identify_number)}smaller-control-group{/if}">
+					<label class="control-label">身份证号:</label>
+					<div class="control-text">
+						{if $user_info.identify_number}
+						<input type="text" value="{$user_info.identify_number}" class="textbox" disabled="true" />
+						{else}
+						未实名认证，点击&nbsp;<a href="{url r="settings#security" p="method=setting-id-box"}" class="f_red" style="text-decoration:underline">去认证</a>
+						{/if}
+					</div>
+					<div class="blank0"></div>
+				</div>
+				<div class="control-group {if !($user_info.mobile)}smaller-control-group{/if}">
+					<label class="control-label">手机号码:</label>
+					<div class="control-text">
+						{if $user_info.mobile}
+						<input type="text" value="{$user_info.mobile}" class="textbox" {if $user_info.mobile}disabled="true"{/if} />
+						{else}
+						为了账户更安全，请绑定手机号码！点击&nbsp;<a href="{url r="settings#security" v="method=setting-mobile-box"}" class="f_red" style="text-decoration:underline">去绑定</a>
+						{/if}
+					</div>
+					<div class="blank0"></div>
+				</div>
+				<div class="control-group small-control-group" style="*z-index:1;">	
+					<label class="control-label">性别:</label>
+					<div class="control-text">
+						<label class="ui_radiobox mr10" rel="sex" style="margin-top:12px">
+							<input type="radio" name="sex" {if $user_info.sex eq 1}checked="checked"{/if} value="1" />男
+						</label>
+						<label class="ui_radiobox" rel="sex" style="margin-top:12px">
+							<input type="radio" name="sex" {if $user_info.sex eq 0}checked="checked"{/if} value="0" />女
+						</label>
+					</div>
+					<div class="blank0"></div>
+				</div>
+				<div class="control-group small-control-group">
+					<label class="control-label">所在地区:</label>
+					<div class="control-text">
+						<select name="province" id="province" class="ui-select field_select small">
+							<option value="" rel="0">请选择省份</option>			
+							{foreach from=$region_lv2 item=region}
+							<option value="{$region.name}" rel="{$region.id}" {if $region.selected}selected="selected"{/if}>{$region.name}</option>
+							{/foreach}
+						</select>
+						<select name="city" id="city" class="ui-select field_select small">
+							<option value="" rel="0">请选择城市</option>
+							{foreach from=$region_lv3 item=region}
+							<option value="{$region.name}" rel="{$region.id}" {if $region.selected}selected="selected"{/if}>{$region.name}</option>
+							{/foreach}
+						</select>
+					</div>
+					<div class="blank0"></div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">所在公司:</label>
+					<div class="control-text">
+						<input type="text" value="{$user_info.company}" class="textbox" name="company" />
+					</div>
+					<div class="blank0"></div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">所在职位:</label>
+					<div class="control-text">
+						<input type="text" value="{$user_info.job}" class="textbox" name="job" />
+					</div>
+					<div class="blank0"></div>
+				</div>
+				<div class="control-group">
+					<label class="control-label radio_lable">
+						投资领域:
+						<div class="cate_note">(最多只能选择3个)</div>
+					</label>
+					<div class="control-text" style="width:530px;height:auto">
+						<div id="cate_name_list">
+							{foreach from=$deal_cate item=cates_item name=key}
+		                    <label class="mr15">
+			                	<span class="ui_check info_view {if $user_info.cate_name[$cates_item.id]}ui_checked{/if}" type="radio" rel="info_view">
+			                        <input class="cate_name" type="checkbox" name="cates[{$cates_item.id}]" id="pc" value="{$cates_item.name}" {if $user_info.cate_name[$cates_item.id]}checked="checked"{/if} rel="cate_name" />
+			                    </span>
+								{$cates_item.name}
+		                    </label>
+		                    {/foreach}
+						</div>
+                    </div>
+					<div class="blank0"></div>
+				</div>
+				<div class="control-group" style="height:163px">
+					<label class="control-label">自我介绍:</label>
+					<div class="control-text" style="height:auto;line-height:1.5;">
+						<textarea name="intro" class="textareabox w300">{$user_info.intro}</textarea>
+						<div class="blank5"></div>
+						<div class="f12 f_999">这里可以输入大约300字的自我介绍，让大家多了解你</div>
+					</div>
+					<div class="blank0"></div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">博客或微博:</label>
+					<div class="control-text" style="height:auto;">
+						<div  id="weibo_list">
+						{if $weibo_list}
+						{foreach from=$weibo_list item=weibo_item key=key}
+							<div>
+								<input type="text" value="{$weibo_item.weibo_url}" class="textbox" name="weibo_url[]" />
+								{if $key gt 0}
+								<a href="javascript:void(0);" onclick="del_weibo(this);" class="f_red">删除</a>
+								{/if}
+								<div class="blank10"></div>
+							</div>
+						{/foreach}
+						{else}
+							<div>
+								<input type="text" value="" class="textbox" name="weibo_url[]" />
+								<div class="blank10"></div>
+							</div>
+						{/if}
+						</div>
+						<a href="javascript:void(0);" onclick="add_weibo();" class="theme_fcolor" style="line-height:1.5;">更多</a>
+					</div>
+					<div class="blank0"></div>
+				</div>
+				<div class="blank10"></div>
+				<div class="submit_btn_row control-group">
+					<label class="control-label"></label>
+					<input type="button" value="保存最新的设置" class="ui-button theme_bgcolor" />
+					<input type="hidden" value="1" name="ajax" />
+				</div>
+				<div class="blank10"></div>
+			</form>
+		</div>
+		<div class="right" style="width:210px;">
+			<span style="font-size:14px">个人头像</span>
+			<div class="blank10"></div>
+			<img id="avatar" src="{function name="get_user_avatar" uid=$user_info.id type="middle"}" />
+			<div class="blank20"></div>
+			<label class="fileupload"  id="avatar_file">
+				<input type="button" class="filebox" name="avatar_file"   style="cursor:pointer;padding: 0;height: 39px;width: 97px;filter: alpha(opacity=0);-moz-opacity: 0;-khtml-opacity: 0;opacity: 0;"/>
+			</label>
+			<label class="fileuploading hide" ></label>
+		</div>
+		<div id="gotop" style="display: block; z-index: 99;"></div>
+		<div class="blank"></div>
+	</div>
+	<div class="blank"></div>
+</div>
+<!--中间结束-->
+<div class="blank"></div>
+<script>
+	get_file_fun('avatar_file');
+
+	// 投资领域限制只能3个
+	(function(){
+		var cate_name_list=$("#cate_name_list");
+		var cate_name=cate_name_list.find("input[rel='cate_name']");
+		var notChecked = cate_name_list.find("input[rel='cate_name']").not("input:checked");
+		var isChecked = cate_name_list.find("input[rel='cate_name']:checked");
+		cate_name.bind('click',function(){
+			check();
+		});
+	  	if(isChecked.length>=3){
+	  		for(var i=0; i<notChecked.length; i++){
+				notChecked[i].disabled=true;
+			}
+	  	}
+		function disableCheckBox(){ 
+			for(var i=0; i<cate_name.length; i++){
+				if(!cate_name[i].checked) 
+				cate_name[i].disabled=true;
+			}
+		}
+		function ableCheckBox(){
+		    for(var i=0; i<cate_name.length; i++)
+		    cate_name[i].disabled = false;
+		}
+
+		function check(){
+		    var sun=0;
+		    for(var i=0; i<cate_name.length; i++){
+		        if(cate_name[i].type=="checkbox" && cate_name[i].checked)
+		        	sun++;
+		        if(sun<3) {
+		            ableCheckBox();
+		            //break; 
+		        } else if (sun==3) {
+		            disableCheckBox();
+		           	event.srcElement.checked = true;
+		            break;
+		        } else if (sun>3) {
+		            event.srcElement.checked = false;
+		            break;
+		        }
+		    }
+		}
+	})();
+</script>
+{include file="inc/footer.html"} 

@@ -1,0 +1,210 @@
+{include file="inc/header.html"} 
+<?php
+$this->_var['dpagecss'][] = $this->_var['TMPL_REAL']."/css/deal.css";
+$this->_var['dpagecss'][] = $this->_var['TMPL_REAL']."/css/fancybox.css";
+$this->_var['dpagejs'][] = $this->_var['TMPL_REAL']."/js/jquery.fancybox.js";
+$this->_var['dpagejs'][] = $this->_var['TMPL_REAL']."/js/deal.js";
+$this->_var['dcpagejs'][] = $this->_var['TMPL_REAL']."/js/deal.js";
+$this->_var['dpagejs'][] = $this->_var['TMPL_REAL']."/js/faq.js";
+$this->_var['dcpagejs'][] = $this->_var['TMPL_REAL']."/js/faq.js";
+
+?>
+<link rel="stylesheet" type="text/css" href="{function name="parse_css" v="$dpagecss"}" />
+<script type="text/javascript" src="{function name="parse_script" v="$dpagejs" c="$dcpagejs"}"></script>
+
+{if $user_level[0]['level'] neq ''}
+	{if $user_level[0]['level'] ge $deal_info.deal_level}
+<div class="blank"></div>
+<div class="shadow_bg">
+	<div class="wrap white_box">
+		{include file="inc/deal_header.html"}
+
+		
+		<div class="deal_box">
+			<div class="deal_left">
+				<div class="image_box">
+				{if $deal_info.source_vedio eq ''}
+				<img src="{function name="get_spec_image" v=$deal_info.image w=570 h=430}" alt="{$deal_info.name}" />
+				{else}
+				<embed wmode="opaque"wmode="opaque"src="{$deal_info.source_vedio}" allowFullScreen="true" quality="high" width="570" height="430" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>
+				{/if}
+				</div>
+				<div class="blank"></div>
+				<div class="share_row">
+				<div class="f_l">
+				<!-- Baidu Button BEGIN -->
+				<div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare">
+				<span class="bds_more">分享到：</span>
+				<a class="bds_qzone"></a>
+				<a class="bds_tsina"></a>
+				<a class="bds_tqq"></a>
+				<a class="bds_renren"></a>
+				<a class="bds_t163"></a>
+				<a class="shareCount"></a>
+				</div>
+				<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=0" ></script>
+				<script type="text/javascript" id="bdshell_js"></script>
+				<script type="text/javascript">
+				document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+				</script>
+				<!-- Baidu Button END -->
+				</div>
+				<div class="f_r deal_url">
+				<input type="text" name="deal_url" /> 
+				<span></span>
+				</div>
+				</div>
+				<div class="blank"></div>
+				<div class="blank"></div>
+				<div class="deal_description">
+					{$deal_info.description}
+				</div>
+				<div class="blank"></div>				
+				
+				<div class="deal_qa">
+					
+						{foreach from=$deal_faq_list item=faq key=key}
+			
+							<div class="faq_question" rel="{$faq.id}"> - {$faq.question}</div>
+							<div class="faq_answer" rel="{$faq.id}">{function name="nl2br" v=$faq.answer}</div>
+							<div class="blank"></div>
+	
+						{/foreach}
+					
+				</div>
+				<div class="blank"></div>
+				{if $deal_info.tags neq ''}
+				<div class="blank"></div>
+				<div class="deal_tags">
+					标签：
+					{foreach from=$deal_info.tags_arr item=tag}
+					{if trim($tag) neq ''}
+					<a href="{url r="deals" p="tag=$tag"}" title="{$tag}">{$tag}</a>&nbsp;
+					{/if}
+					{/foreach}
+				</div>
+				<div class="blank"></div>
+				{/if}
+				<div class="blank"></div>
+				<div class="deal_contact">
+					<div class="f_l">如果您对项目有疑问，可以在此向发起人咨询。</div>
+					<div class="f_r">
+						<div class="ui-button blue" rel="blue" onclick="send_message({$deal_info.user_id});">
+							<div>
+								<span>对发起人提问</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			<div class="deal_right">
+				{include file="inc/deal_right.html"}
+			</div><!--end right-->
+		</div>
+		
+		<div class="blank"></div>
+{else}
+	<div style="height:600px;">
+		<h1 class="deal_center">对不起您没有权限，无法浏览该项目!</h1>		
+	</div>
+{/if}
+{/if}
+{if $user_level[0]['level'] eq ''}
+	<div class="blank"></div>
+<div class="shadow_bg">
+	<div class="wrap white_box">
+		{include file="inc/deal_header.html"}
+
+	
+		<div class="deal_box">
+			<div class="deal_left">
+				<div class="image_box">
+				{if $deal_info.source_vedio eq ''}
+				<img src="{function name="get_spec_image" v=$deal_info.image w=570 h=430}" alt="{$deal_info.name}" />
+				{else}
+				<embed wmode="opaque"wmode="opaque"src="{$deal_info.source_vedio}" allowFullScreen="true" quality="high" width="570" height="430" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>
+				{/if}
+				</div>
+				<div class="blank"></div>
+				<div class="share_row">
+				<div class="f_l">
+				<!-- Baidu Button BEGIN -->
+				<div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare">
+				<span class="bds_more">分享到：</span>
+				<a class="bds_qzone"></a>
+				<a class="bds_tsina"></a>
+				<a class="bds_tqq"></a>
+				<a class="bds_renren"></a>
+				<a class="bds_t163"></a>
+				<a class="shareCount"></a>
+				</div>
+				<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=0" ></script>
+				<script type="text/javascript" id="bdshell_js"></script>
+				<script type="text/javascript">
+				document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+				</script>
+				<!-- Baidu Button END -->
+				</div>
+				<div class="f_r deal_url">
+				<input type="text" name="deal_url" /> 
+				<span></span>
+				</div>
+				</div>
+				<div class="blank"></div>
+				<div class="blank"></div>
+				<div class="deal_description">
+					{$deal_info.description}
+				</div>
+				<div class="blank"></div>				
+				
+				<div class="deal_qa">
+					
+						{foreach from=$deal_faq_list item=faq key=key}
+			
+							<div class="faq_question" rel="{$faq.id}"> - {$faq.question}</div>
+							<div class="faq_answer" rel="{$faq.id}">{function name="nl2br" v=$faq.answer}</div>
+							<div class="blank"></div>
+	
+						{/foreach}
+					
+				</div>
+				<div class="blank"></div>
+				{if $deal_info.tags neq ''}
+				<div class="blank"></div>
+				<div class="deal_tags">
+					标签：
+					{foreach from=$deal_info.tags_arr item=tag}
+					{if trim($tag) neq ''}
+					<a href="{url r="deals" p="tag=$tag"}" title="{$tag}">{$tag}</a>&nbsp;
+					{/if}
+					{/foreach}
+				</div>
+				<div class="blank"></div>
+				{/if}
+				<div class="blank"></div>
+				<div class="deal_contact">
+					<div class="f_l">如果您对项目有疑问，可以在此向发起人咨询。</div>
+					<div class="f_r">
+						<div class="ui-button blue" rel="blue" onclick="send_message({$deal_info.user_id});">
+							<div>
+								<span>对发起人提问</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			<div class="deal_right">
+				{include file="inc/deal_right.html"}
+			</div><!--end right-->
+		</div>
+		
+		<div class="blank"></div>
+		
+		
+	</div>
+</div>
+<div class="blank"></div>
+{/if}
+{include file="inc/footer.html"} 

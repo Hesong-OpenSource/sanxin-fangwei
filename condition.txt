@@ -1,0 +1,1 @@
+select d.* from fanwe_deal  as d   where  1=1 AND d.is_delete = 0 AND d.is_effect = 1 and d.type=0  AND is_special=1 ORDER BY  sort asc  LIMIT 0,8

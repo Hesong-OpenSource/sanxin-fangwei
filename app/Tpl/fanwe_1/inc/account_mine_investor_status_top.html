@@ -1,0 +1,11 @@
+<div class="list_title clearfix">
+	<div {if $type eq 0}class="cur"{/if}>
+		<a href="{url r="account#mine_investor_status" p="type=0"}">询价列表</a>
+	</div>
+	<div {if $type eq 1}class="cur"{/if}>
+		<a href="{url r="account#mine_investor_status" p="type=1"}">领投列表</a>
+	</div>
+	<div {if $type eq 2}class="cur"{/if}>
+		<a href="{url r="account#mine_investor_status" p="type=2"}">跟投列表</a>
+	</div>
+</div>

@@ -1,0 +1,71 @@
+<style>
+	.nc { display:none; }
+	.nc_hover { display:block; }
+	.li_hover { display:block; }
+</style>
+<div class="hd">
+	<div class="hd1">
+		<span class="title f_l">{$deal_info.name}</span>
+		<span class="f_r bt1">
+			<div class="ui-button theme_bgcolor fx f_l f12" id="fx_show" style="float:left;position:relative;">
+				<i></i>分享
+				<div id="nc" class="f_r nc" style="position:absolute;right:0;top:25px;padding:5px 0;">
+					<div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a></div>
+					<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{},"image":{"viewList":["tsina","qzone","weixin","tqq","douban","renren"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["tsina","qzone","weixin","tqq","douban","renren"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+				</div>
+			</div>
+			{if $deal_info.type neq 1}	
+				{if $is_focus}
+				<div class="qxgz attention_focus_deal f_l ui-button bg_green f12" id="{$deal_info.id}">
+					<i></i>取消关注
+				</div>	
+				{else}
+				<div class="gz attention_focus_deal f_l ui-button bg_green f12" id="{$deal_info.id}">
+					<i></i>关注
+				</div>	
+				{/if}
+			{/if}
+		</span>
+
+	</div>
+	<div class="blank10"></div>
+	<div class="hd2">
+		<span class="theme_bgcolor" style="padding:2px 5px;color:#fff">发起人</span>
+		{if $deal_info.user_id neq 0}
+		<span>
+			<a href="{url r="home" p="id=$deal_info.user_id"}" class="mf">{$deal_info.user_name}{if $user_info.user_icon}<img src="{$user_info.user_icon}" alt="会员等级" class="level_icon" />{/if}</a>
+		</span>
+		<span style="color:#dadada">|</span>
+		<span class="dz">{$deal_info.province}&nbsp;{$deal_info.city}</span><span style="color:#dadada">|</span>
+		<span class="kj">{$deal_info.deal_type}</span>
+		{else}
+		<span>{function name="app_conf" v="SITE_NAME"}</span>
+		{/if}
+	</div>
+	<div class="hd3">
+		<div class="hd31 f_l">
+			<ul class="clearfix">
+				<li {if ACTION_NAME eq 'show'}class="select"{/if}><a href="{url r="deal#show" p="id=$deal_info.id"}">项目主页</a></li>
+				{if $access==1}
+				<li {if ACTION_NAME eq 'update' or ACTION_NAME eq 'updatedetail'}class="select"{/if}><a href="{url r="deal#update" p="id=$deal_info.id"}">动态({$deal_info.log_count})</a></li>
+				{if $deal_info.is_support_print eq 1 && $deal_info.type neq 1}
+				<li {if ACTION_NAME eq 'support'}class="select"{/if}><a href="{url r="deal#support" p="id=$deal_info.id"}">支持者({$deal_info.person})</a></li>
+				{/if}
+				<li {if ACTION_NAME eq 'comment'}class="select"{/if}><a href="{url r="deal#comment" p="id=$deal_info.id"}">评论({$comment_count})</a></li>				
+				{/if}
+			</ul>
+		</div>
+	</div>
+</div>
+<script>
+$(function(){
+	$("#fx_show").on('click',function(e){
+		$("#nc").toggle();
+		e.stopPropagation();
+	});
+	$(document).on('click',function() { 
+		$("#nc").hide(); 
+	}); 
+		
+});
+</script>

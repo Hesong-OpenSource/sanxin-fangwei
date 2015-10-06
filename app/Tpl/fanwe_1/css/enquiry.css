@@ -1,0 +1,8 @@
+.control-group{margin-left:0}
+.enquiry .holder_tip{top:0;left:0;width:95px;}
+.ui-center-button{margin:0 10px 0 0;}
+
+/* 询价 */
+.chance_left{width:150px;top:10px;right:0;_right:20px;}
+.chance_left h3{height:30px;line-height:30px;color:#fff;font-weight:normal;}
+.chance_left span{width:148px;height:40px;line-height:40px;border:1px solid #e3e3e3;border-top:0;display:block;}

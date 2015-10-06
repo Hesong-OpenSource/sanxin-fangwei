@@ -1,0 +1,61 @@
+{include file="inc/header_account.html"}
+<style type="text/css">
+	body{background:#f4f4f4}
+</style>
+<section class="project_choose">
+	{if app_conf("INVEST_STATUS") eq 0}
+	<div class="ul_block">
+		<ul>
+			<li>
+				<a href="{url_wap r="project#add"}" class="webkit-box">
+					<i class="protype_icon cp_icon mr10"></i>
+					<div class="text webkit-box-flex">
+						<p class="f16 mb5">回报众筹</p>
+						<span class="f12 f_999">我有一个梦想，有创意项目，有创意产品，点击发布回报众筹</span>
+					</div>
+				</a>
+			</li>
+			<li style="display:none">
+				<a href="{url_wap r="project#investor_index1"}" class="webkit-box">
+					<i class="protype_icon gq_icon mr10"></i>
+					<div class="text webkit-box-flex">
+						<p class="f16 mb5">股权众筹</p>
+						<span class="f12 f_999">我有创业梦想，有融资需求，点击发布股权众筹</span>
+					</div>
+				</a>
+			</li>
+		</ul>
+	</div>
+	{/if}
+	{if app_conf("INVEST_STATUS") eq 1}
+	<div class="ul_block" >
+		<ul>
+			<li>
+				<a href="{url_wap r="project#add"}" class="webkit-box">
+					<i class="protype_icon cp_icon mr10"></i>
+					<div class="text webkit-box-flex">
+						<p class="f16 mb5">回报众筹</p>
+						<span class="f12 f_999">我有一个梦想，有创意项目，有创意产品，点击发布回报众筹</span>
+					</div>
+				</a>
+			</li>
+		</ul>
+	</div>
+	{/if}
+	{if app_conf("INVEST_STATUS") eq 2}
+	<div class="ul_block">
+		<ul>
+			<li>
+				<a href="{url_wap r="project#investor_index1"}" class="webkit-box">
+					<i class="protype_icon gq_icon mr10"></i>
+					<div class="text webkit-box-flex">
+						<p class="f16 mb5">股权众筹</p>
+						<span class="f12 f_999">我有创业梦想，有融资需求，点击发布股权众筹</span>
+					</div>
+				</a>
+			</li>
+		</ul>
+	</div>
+	{/if}
+</section>
+{include file="inc/footer.html"} 

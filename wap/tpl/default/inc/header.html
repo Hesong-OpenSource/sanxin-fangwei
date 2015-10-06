@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="format-detection" content="email=no">
+        <title>{if $page_title neq ''}{$page_title} - {/if}{$site_name} - {$seo_title}</title>
+        <meta name="keywords" content="{$seo_keyword}" />
+        <meta name="description" content="{$seo_description}" />
+        <?php
+        $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/layout.css";
+        $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/style.css";
+        $this->_var['pagecss'][] = $this->_var['TMPL_REAL']."/css/weebox.css";
+
+        $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/common_js/jquery-1.8.2.min.js";
+        $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/jquery.bgiframe.js";
+        $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/jquery.weebox.js";
+        $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/touch.js";
+        $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/fanweUI.js";
+        $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/fanweUI.js";
+        $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/zcUI.js";
+        $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/fanwe_utils/zcUI.js";
+        $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/common_js/script.js";
+        $this->_var['cpagejs'][]='';
+        if(app_conf("APP_MSG_SENDER_OPEN")==1)
+        {
+            $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/msg_sender.js";
+            $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/msg_sender.js";
+        }
+        $this->_var['pagejs'][] = $this->_var['TMPL_REAL']."/js/plupload/plupload.full.min.js";
+        $this->_var['cpagejs'][] = $this->_var['TMPL_REAL']."/js/plupload/plupload.full.min.js";
+        ?>
+        <link rel="stylesheet" type="text/css" href="{$font_url}" />
+        <link rel="stylesheet" type="text/css" href="{function name="parse_css" v="$pagecss"}" />
+        <script type="text/javascript" src="{function name="parse_script" v="$pagejs" c="$cpagejs"}"></script>
+        <script type="text/javascript">
+            var APP_ROOT = '{$APP_URL}';
+            var APP_ROOT_ORA = '{$PC_URL}';
+            {if app_conf("APP_MSG_SENDER_OPEN") eq 1}
+            var send_span = {function name="app_conf" v="SEND_SPAN"}000;
+            {/if}
+			var __HASH_KEY__ = "{$hash_key}";
+        </script>
+        <script type='text/javascript' src='{$APP_ROOT}/public/region.js'></script>
+        <!--百度轻应用-->
+        <meta name="baidu-tc-cerfication" content="688cdfaa49f7c8f87fd5883492587d8e">
+    </head>
+    <body>
+        <div class="navbar theme_color1">
+            <div class="nav-wrap-left">
+                {if ( $class neq 'settings' && $class neq 'account' && $class neq 'investor') || ($class eq 'settings' && $act eq 'index')}
+                     <a href="{$APP_URL}" class="logo"><img src="{$site_logo}"></a>
+                {else}
+                <a onclick="window.history.go(-1);" class="back">
+                    <i class="fa fa-chevron-left"></i>
+                </a>
+                {/if}
+            </div>
+            <div class="nav-wrap-right">
+                <a class="screen" id="screen" href="javascript:void(0);"><i class="fa fa-search"></i></a>
+                <a class="mybtn" href="{url_wap r="settings"}"><i class="fa fa-user"></i></a>
+            </div>
+        </div>
+    {include file="inc/header_search.html"}
+    <div class="wraper">
